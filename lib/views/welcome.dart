@@ -13,13 +13,12 @@ class Welcome extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-//        decoration: BoxDecoration(
-//          image: new DecorationImage(
-//            image: new AssetImage('images/background.png'),
-//            fit: BoxFit.cover,
-//          ),
-//        ),
-        color: Colors.grey.shade50,
+        decoration: BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage('assets/images/auth_bg.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: SafeArea(
           left: true,
           right: true,
