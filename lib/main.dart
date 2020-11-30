@@ -33,5 +33,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//TODO('Work on 404 Page again')
+//TODO('Work on Dashboard')
+//TODO('Add Firestore to this project')
+//TODO('Add Bloc to this project')
 //TODO('Get auth_bg image from the femi/ezenma')
