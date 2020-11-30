@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/components/custom_flat_button.dart';
+import 'package:staff_portal/components/custom_outline_button.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/views/login.dart';
 import 'package:staff_portal/views/password_reset.dart';
@@ -27,3 +29,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+//TODO('Change the icons on the login form')
+//TODO('Add border radius to CustomOutlineButton and CustomFlatButton ')
+//TODO('Create a 404 Page')
+//TODO('Work on Password Reset Page')
+//TODO('Get auth_bg image from the femi/ezenma')
