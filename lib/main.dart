@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:staff_portal/components/custom_flat_button.dart';
-import 'package:staff_portal/components/custom_outline_button.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/views/login.dart';
+import 'package:staff_portal/views/page_not_found.dart';
 import 'package:staff_portal/views/password_reset.dart';
 import 'package:staff_portal/views/register.dart';
 import 'package:staff_portal/views/splash.dart';
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: kAppName,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: kPrimaryColor,
       ),
       initialRoute: Splash.id,
       routes: {
@@ -25,13 +24,14 @@ class MyApp extends StatelessWidget {
         Login.id: (BuildContext ctx) => Login(),
         Register.id: (BuildContext ctx) => Register(),
         PasswordReset.id: (BuildContext ctx) => PasswordReset(),
+        PageNotFound.id: (BuildContext ctx) => PageNotFound(),
+      },
+      onUnknownRoute: (settings) {
+        return MaterialPageRoute(builder: (_) => PageNotFound());
       },
     );
   }
 }
 
-//TODO('Change the icons on the login form')
-//TODO('Add border radius to CustomOutlineButton and CustomFlatButton ')
-//TODO('Create a 404 Page')
 //TODO('Work on Password Reset Page')
 //TODO('Get auth_bg image from the femi/ezenma')

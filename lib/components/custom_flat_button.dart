@@ -18,5 +18,9 @@ class CustomFlatButton extends FlatButton {
             style: TextStyle(color: textColor),
           ),
           onPressed: onPressed,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            //side: BorderSide(color: Colors.red)
+          ),
         );
 }

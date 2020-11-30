@@ -13,5 +13,9 @@ class CustomOutlineButton extends OutlineButton {
           color: color,
           child: Text(title),
           onPressed: onPressed,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            //side: BorderSide(color: Colors.red)
+          ),
         );
 }

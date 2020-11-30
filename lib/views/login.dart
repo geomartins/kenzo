@@ -4,6 +4,9 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_outline_button.dart';
 import 'package:staff_portal/config/constants.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:staff_portal/views/password_reset.dart';
+import 'package:staff_portal/views/register.dart';
 
 class Login extends StatelessWidget {
   static const id = 'login';
@@ -61,7 +64,6 @@ class Login extends StatelessWidget {
       child: ClipPath(
         clipper: WaveClipperOne(reverse: true),
         child: Container(
-          //height: MediaQuery.of(context).size.height / 1.5,
           color: Colors.white,
           padding: EdgeInsets.all(20.0),
           child: Column(
@@ -74,8 +76,11 @@ class Login extends StatelessWidget {
               TextField(
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(10.0),
-                    prefixIcon: Icon(Icons.attach_file),
-                    suffixIcon: Icon(Icons.create),
+                    prefixIcon: Icon(
+                      FontAwesome.envelope_o,
+                      size: 20.0,
+                    ),
+                    suffixIcon: Icon(Icons.done),
                     hintText: 'water@gmail.com',
                     labelText: 'Email Address'),
               ),
@@ -89,9 +94,29 @@ class Login extends StatelessWidget {
                     focusColor: kPrimaryColor,
                     fillColor: kPrimaryColor,
                     hoverColor: kPrimaryColor,
-                    prefixIcon: Icon(Icons.security),
-                    suffixIcon: Icon(Icons.remove_red_eye),
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: Icon(
+                      Icons.visibility_off,
+                    ),
                     labelText: 'Password'),
+              ),
+              SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, PasswordReset.id),
+                    child: Text(
+                      'Forget password?',
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  )
+                ],
               ),
               SizedBox(
                 height: 10.0,
@@ -99,7 +124,9 @@ class Login extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: CustomFlatButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'fhfh');
+                  },
                   color: kPrimaryColor,
                   title: 'Log In',
                   textColor: Colors.white,
@@ -138,7 +165,7 @@ class Login extends StatelessWidget {
                 child: CustomOutlineButton(
                   title: 'Sign Up',
                   color: kPrimaryColor,
-                  onPressed: () {},
+                  onPressed: () => Navigator.pushNamed(context, Register.id),
                 ),
               ),
             ],
