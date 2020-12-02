@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "568815498090",
+    "firebase_url": "https://agropark-76f03.firebaseio.com",
+    "project_id": "agropark-76f03",
+    "storage_bucket": "agropark-76f03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568815498090:android:e585a6682ea0636c016b13",
+        "android_client_info": {
+          "package_name": "ng.agropark.staff_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "568815498090-fcmldeb162m2guj2ok45n0fui2q2i4u1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.agropark.staff_portal",
+            "certificate_hash": "cf3e3ce9dfe1bff914f9297fa17caf4c9e183e5c"
+          }
+        },
+        {
+          "client_id": "568815498090-3ia68ak001l8nf3gsbndl0r4e9v9q4j7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ25eLWoGdTuDcHRuxqTeel_Uh-_cIhSM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "568815498090-3ia68ak001l8nf3gsbndl0r4e9v9q4j7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

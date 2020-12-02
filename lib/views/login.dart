@@ -5,6 +5,7 @@ import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_outline_button.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/password_reset.dart';
 import 'package:staff_portal/views/register.dart';
 
@@ -125,7 +126,7 @@ class Login extends StatelessWidget {
                 width: double.infinity,
                 child: CustomFlatButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, 'fhfh');
+                    Navigator.pushNamed(context, Dashboard.id);
                   },
                   color: kPrimaryColor,
                   title: 'Log In',
