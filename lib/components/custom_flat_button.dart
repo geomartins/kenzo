@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/config/constants.dart';
 
 class CustomFlatButton extends FlatButton {
   final Color color;
@@ -12,6 +13,7 @@ class CustomFlatButton extends FlatButton {
     @required this.title,
     @required this.onPressed,
   }) : super(
+          disabledColor: kTertiaryColor,
           color: color,
           child: Text(
             title,
