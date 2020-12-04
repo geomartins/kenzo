@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/components/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
-import 'package:staff_portal/config/constants.dart';
+import 'package:staff_portal/services/auth_service.dart';
 
 class Dashboard extends StatelessWidget {
   static const id = 'dashboard';
-
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomAuthBuilder(
+        child: Scaffold(
       key: _drawerKey,
       bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
       drawer: CustomDrawer(),
@@ -18,10 +19,15 @@ class Dashboard extends StatelessWidget {
         child: Container(
           height: MediaQuery.of(context).size.height,
           child: Center(
-            child: Text('Dashboard'),
+            child: GestureDetector(
+              child: Text('Dashboard'),
+              onTap: () async {
+                await AuthService().logout();
+              },
+            ),
           ),
         ),
       ),
-    );
+    ));
   }
 }

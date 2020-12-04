@@ -13,6 +13,7 @@ import 'package:staff_portal/views/register.dart';
 import 'package:staff_portal/views/splash.dart';
 import 'package:staff_portal/views/welcome.dart';
 import 'package:get/get.dart';
+import './views/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,12 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return LoginProvider(
@@ -32,6 +38,7 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: Splash.id,
           routes: {
+            Home.id: (BuildContext ctx) => Home(),
             Splash.id: (BuildContext ctx) => Splash(),
             Welcome.id: (BuildContext ctx) => Welcome(),
             Login.id: (BuildContext ctx) => Login(),
@@ -53,6 +60,5 @@ class MyApp extends StatelessWidget {
 }
 
 //TODO('Work on Dashboard')
-//TODO('Work on Login Form Submission to Firestore')
-//TODO('Work on AuthStateChange Redirect to Login once you are not authenticated')
+//TODO('Work on Password Reset Form Submission to Firestore')
 //TODO('Get auth_bg image from the femi/ezenma')

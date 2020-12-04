@@ -8,7 +8,6 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/user_model.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/password_reset.dart';
-import 'package:staff_portal/views/register.dart';
 import '../providers/login_provider.dart';
 import 'custom_flat_button.dart';
 import 'custom_outline_button.dart';
@@ -41,7 +40,7 @@ class CustomLoginForm extends StatelessWidget {
                         FontAwesome.envelope_o,
                         size: 20.0,
                       ),
-                      suffixIcon: Icon(Icons.done),
+                      suffixIcon: snapshot.hasError ? null : Icon(Icons.done),
                       hintText: 'water@gmail.com',
                       labelText: 'Email Address',
                       errorText: snapshot.error,
@@ -57,22 +56,34 @@ class CustomLoginForm extends StatelessWidget {
                 stream: bloc.password,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   print(snapshot.data);
-                  return TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(1.0),
-                      focusColor: kPrimaryColor,
-                      fillColor: kPrimaryColor,
-                      hoverColor: kPrimaryColor,
-                      prefixIcon: Icon(Icons.lock_outline),
-                      suffixIcon: Icon(
-                        Icons.visibility_off,
-                      ),
-                      labelText: 'Password',
-                      errorText: snapshot.error,
-                    ),
-                    onChanged: (String newValue) => bloc.passwordSink(newValue),
-                  );
+                  return StreamBuilder<bool>(
+                      stream: bloc.passwordVisibility,
+                      initialData: false,
+                      builder: (context, snapshotx) {
+                        return TextField(
+                          obscureText: !snapshotx.data,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.all(1.0),
+                            focusColor: kPrimaryColor,
+                            fillColor: kPrimaryColor,
+                            hoverColor: kPrimaryColor,
+                            prefixIcon: Icon(Icons.lock_outline),
+                            suffixIcon: GestureDetector(
+                              onTap: () =>
+                                  bloc.passwordVisibilitySink(!snapshotx.data),
+                              child: Icon(
+                                snapshotx.data == false
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                            ),
+                            labelText: 'Password',
+                            errorText: snapshot.error,
+                          ),
+                          onChanged: (String newValue) =>
+                              bloc.passwordSink(newValue),
+                        );
+                      });
                 },
               ),
               SizedBox(
@@ -174,7 +185,12 @@ class CustomLoginForm extends StatelessWidget {
                 child: CustomOutlineButton(
                   title: 'Sign Up',
                   color: kPrimaryColor,
-                  onPressed: () => Navigator.pushNamed(context, Register.id),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return Dashboard();
+                    }));
+                  },
                 ),
               ),
             ],

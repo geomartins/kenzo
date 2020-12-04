@@ -8,6 +8,7 @@ class LoginBloc extends Object with Validators {
   BehaviorSubject _email = new BehaviorSubject<String>();
   BehaviorSubject _password = new BehaviorSubject<String>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
+  BehaviorSubject _passwordVisibility = new BehaviorSubject<bool>();
 
   void emailSink(String value) {
     _email.sink.add(value);
@@ -21,9 +22,14 @@ class LoginBloc extends Object with Validators {
     _isLoading.sink.add(value);
   }
 
+  void passwordVisibilitySink(bool value) {
+    _passwordVisibility.sink.add(value);
+  }
+
   Stream<String> get email => _email.stream.transform(validateEmail);
   Stream<String> get password => _password.stream.transform(validatePassword);
   Stream get isLoading => _isLoading.stream;
+  Stream get passwordVisibility => _passwordVisibility.stream;
 
   Stream<bool> get submitValid =>
       Rx.combineLatest2(email, password, (e, p) => true);
@@ -39,6 +45,8 @@ class LoginBloc extends Object with Validators {
         print(user.email);
         print(user.uid);
         return user;
+      } else {
+        return null;
       }
     } catch (e) {
       rethrow;
@@ -55,5 +63,6 @@ class LoginBloc extends Object with Validators {
     _email.close();
     _password.close();
     _isLoading.close();
+    _passwordVisibility.close();
   }
 }

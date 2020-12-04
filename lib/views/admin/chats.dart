@@ -4,7 +4,7 @@ import 'package:staff_portal/components/custom_drawer.dart';
 
 class Chats extends StatelessWidget {
   static const id = 'chats';
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

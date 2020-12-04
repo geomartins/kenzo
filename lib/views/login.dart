@@ -7,7 +7,6 @@ import 'package:staff_portal/providers/login_provider.dart';
 
 class Login extends StatelessWidget {
   static const id = 'login';
-
   @override
   Widget build(BuildContext context) {
     final bloc = LoginProvider.of(context);

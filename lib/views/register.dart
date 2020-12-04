@@ -5,8 +5,6 @@ import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_outline_button.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:staff_portal/views/password_reset.dart';
-import 'package:staff_portal/views/register.dart';
 
 import 'login.dart';
 

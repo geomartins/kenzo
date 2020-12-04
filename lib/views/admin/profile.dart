@@ -4,7 +4,7 @@ import 'package:staff_portal/components/custom_drawer.dart';
 
 class Profile extends StatelessWidget {
   static const id = 'profile';
-  GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

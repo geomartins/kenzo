@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:staff_portal/components/custom_guest_builder.dart';
 import 'package:staff_portal/views/welcome.dart';
 
 class Splash extends StatefulWidget {
@@ -11,12 +12,14 @@ class Splash extends StatefulWidget {
 class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
-    return new SplashScreen(
-      seconds: 7,
-      navigateAfterSeconds: Welcome(),
-      imageBackground: AssetImage('assets/images/auth_bg.png'),
-      backgroundColor: Colors.white,
-      loaderColor: Colors.white,
+    return CustomGuestBuilder(
+      child: new SplashScreen(
+        seconds: 1,
+        navigateAfterSeconds: Welcome(),
+        imageBackground: AssetImage('assets/images/auth_bg.png'),
+        backgroundColor: Colors.white,
+        loaderColor: Colors.white,
+      ),
     );
   }
 }

@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
+import 'package:staff_portal/components/custom_guest_builder.dart';
 import 'package:staff_portal/config/constants.dart';
 
 class PasswordReset extends StatelessWidget {
   static const id = 'password_reset';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        left: true,
-        right: true,
-        minimum: EdgeInsets.all(40.0),
-        child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            height: 700.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                buildBackIcon(context),
-                SizedBox(height: 70.0),
-                buildAvatar(context),
-                SizedBox(height: 30.0),
-                buildText(context),
-                SizedBox(height: 60.0),
-                buildForm(context),
-              ],
+    return CustomGuestBuilder(
+      child: Scaffold(
+        body: SafeArea(
+          left: true,
+          right: true,
+          minimum: EdgeInsets.all(40.0),
+          child: SingleChildScrollView(
+            child: Container(
+              width: double.infinity,
+              height: 700.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                //mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  buildBackIcon(context),
+                  SizedBox(height: 70.0),
+                  buildAvatar(context),
+                  SizedBox(height: 30.0),
+                  buildText(context),
+                  SizedBox(height: 60.0),
+                  buildForm(context),
+                ],
+              ),
             ),
           ),
         ),

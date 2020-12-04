@@ -61,7 +61,6 @@ class CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool active = false;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -72,7 +71,6 @@ class CustomIconButton extends StatelessWidget {
             size: 25.0,
           ),
           onPressed: () {
-            active = true;
             onPressed();
           },
         ),

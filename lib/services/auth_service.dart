@@ -4,7 +4,6 @@ import 'package:staff_portal/models/user_model.dart';
 
 class AuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
-
   Future<UserModel> loginWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -19,5 +18,15 @@ class AuthService {
         message: e.message,
       );
     }
+  }
+
+  Stream<UserModel> get onAuthStateChanged => auth
+      .userChanges()
+      .map((firebaseUser) => UserModel.fromFirebase(firebaseUser));
+
+  //Stream get onCheck =>  auth.userChanges();
+
+  Future<void> logout() async {
+    await auth.signOut();
   }
 }

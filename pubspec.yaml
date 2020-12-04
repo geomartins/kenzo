@@ -32,6 +32,7 @@ dependencies:
   provider: ^4.3.2+2
   loading_overlay: ^0.2.1
   get: ^3.21.3
+  firebase_user_stream: ^1.1.0
 
 dev_dependencies:
   flutter_test:
