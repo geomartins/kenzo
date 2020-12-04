@@ -24,7 +24,16 @@ class AuthService {
       .userChanges()
       .map((firebaseUser) => UserModel.fromFirebase(firebaseUser));
 
-  //Stream get onCheck =>  auth.userChanges();
+  Future<void> passwordReset(String email) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
 
   Future<void> logout() async {
     await auth.signOut();

@@ -4,13 +4,14 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/user_model.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/password_reset.dart';
-import '../providers/login_provider.dart';
-import 'custom_flat_button.dart';
-import 'custom_outline_button.dart';
+import '../../providers/login_provider.dart';
+import '../custom_flat_button.dart';
+import '../custom_outline_button.dart';
 
 class CustomLoginForm extends StatelessWidget {
   @override
@@ -51,6 +52,9 @@ class CustomLoginForm extends StatelessWidget {
               ),
               SizedBox(
                 height: 5.0,
+              ),
+              Row(
+                children: [],
               ),
               StreamBuilder<String>(
                 stream: bloc.password,
@@ -107,51 +111,76 @@ class CustomLoginForm extends StatelessWidget {
               SizedBox(
                 height: 10.0,
               ),
-              StreamBuilder(
-                  stream: bloc.submitValid,
-                  builder: (context, snapshot) {
-                    print(snapshot.data);
-                    return SizedBox(
-                      width: double.infinity,
-                      child: CustomFlatButton(
-                        onPressed: snapshot.hasData && snapshot.data == true
-                            ? () async {
-                                bloc.loadingSink(true);
+              Row(
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: StreamBuilder(
+                        stream: bloc.submitValid,
+                        builder: (context, snapshot) {
+                          print(snapshot.data);
+                          return SizedBox(
+                            width: double.infinity,
+                            child: StreamBuilder<bool>(
+                                stream: bloc.isLoading,
+                                builder: (context, snapshotx) {
+                                  return CustomFlatButton(
+                                    onPressed: snapshot.hasData &&
+                                            snapshot.data == true &&
+                                            snapshotx.data != true
+                                        ? () async {
+                                            bloc.loadingSink(true);
 
-                                try {
-                                  UserModel user = await bloc.submit();
-                                  if (user != null) {
-                                    Navigator.pushNamed(context, Dashboard.id);
-                                  }
-                                } on PlatformException catch (e) {
-                                  Get.snackbar(
-                                    "Oops",
-                                    'Something Went Wrong',
-                                    colorText: Colors.black,
-                                    titleText: Text('Ooops!!!',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 2.0)),
-                                    messageText: Text(e.message),
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    icon: Icon(
-                                      Icons.error,
-                                      color: Colors.red,
-                                    ),
+                                            try {
+                                              UserModel user =
+                                                  await bloc.submit();
+                                              if (user != null) {
+                                                Navigator.pushNamed(
+                                                    context, Dashboard.id);
+                                              }
+                                            } on PlatformException catch (e) {
+                                              Get.snackbar(
+                                                "Oops",
+                                                'Something Went Wrong',
+                                                colorText: Colors.black,
+                                                titleText: Text('Ooops!!!',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        letterSpacing: 2.0)),
+                                                messageText: Text(e.message),
+                                                snackPosition:
+                                                    SnackPosition.BOTTOM,
+                                                icon: Icon(
+                                                  Icons.error,
+                                                  color: Colors.red,
+                                                ),
+                                              );
+                                              print(e.code);
+                                              print(e.message);
+                                            } finally {
+                                              bloc.loadingSink(false);
+                                            }
+                                          }
+                                        : null,
+                                    color: kPrimaryColor,
+                                    title: 'Log In',
+                                    textColor: Colors.white,
                                   );
-                                  print(e.code);
-                                  print(e.message);
-                                } finally {
-                                  bloc.loadingSink(false);
-                                }
-                              }
-                            : null,
-                        color: kPrimaryColor,
-                        title: 'Log In',
-                        textColor: Colors.white,
-                      ),
-                    );
-                  }),
+                                }),
+                          );
+                        }),
+                  ),
+                  StreamBuilder<bool>(
+                      stream: bloc.isLoading,
+                      initialData: false,
+                      builder: (context, snapshot) {
+                        return CustomOffstageProgressIndicator(
+                          status: !snapshot.data,
+                        );
+                      }),
+                ],
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),

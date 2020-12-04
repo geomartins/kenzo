@@ -1,36 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:loading_overlay/loading_overlay.dart';
-import 'package:staff_portal/components/custom_login_form.dart';
+import '../components/forms/custom_login_form.dart';
 import 'package:staff_portal/config/constants.dart';
-import 'package:staff_portal/providers/login_provider.dart';
 
 class Login extends StatelessWidget {
   static const id = 'login';
   @override
   Widget build(BuildContext context) {
-    final bloc = LoginProvider.of(context);
     return Scaffold(
-      body: StreamBuilder<bool>(
-          stream: bloc.isLoading,
-          initialData: false,
-          builder: (context, snapshot) {
-            return LoadingOverlay(
-              isLoading: snapshot.data,
-              progressIndicator: CircularProgressIndicator(),
-              opacity: 0.3,
-              color: Colors.black12,
-              child: SingleChildScrollView(
-                  child: Container(
-                child: Stack(
-                  children: <Widget>[
-                    buildDescriptionLayout(context),
-                    CustomLoginForm(),
-                  ],
-                ),
-              )),
-            );
-          }),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Stack(
+            children: <Widget>[
+              buildDescriptionLayout(context),
+              CustomLoginForm(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
