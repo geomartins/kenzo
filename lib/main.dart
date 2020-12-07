@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/providers/login_provider.dart';
 import 'package:staff_portal/providers/password_reset_provider.dart';
+import 'package:staff_portal/providers/register_provider.dart';
 import 'package:staff_portal/views/admin/chats.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/admin/events.dart';
@@ -30,31 +31,33 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return PasswordResetProvider(
-      child: LoginProvider(
-        child: GetMaterialApp(
-          home: MaterialApp(
-            title: kAppName,
-            theme: ThemeData(
-              primarySwatch: kPrimaryColor,
+    return RegisterProvider(
+      child: PasswordResetProvider(
+        child: LoginProvider(
+          child: GetMaterialApp(
+            home: MaterialApp(
+              title: kAppName,
+              theme: ThemeData(
+                primarySwatch: kPrimaryColor,
+              ),
+              initialRoute: Splash.id,
+              routes: {
+                Home.id: (BuildContext ctx) => Home(),
+                Splash.id: (BuildContext ctx) => Splash(),
+                Welcome.id: (BuildContext ctx) => Welcome(),
+                Login.id: (BuildContext ctx) => Login(),
+                Register.id: (BuildContext ctx) => Register(),
+                PasswordReset.id: (BuildContext ctx) => PasswordReset(),
+                PageNotFound.id: (BuildContext ctx) => PageNotFound(),
+                Dashboard.id: (BuildContext ctx) => Dashboard(),
+                Profile.id: (BuildContext ctx) => Profile(),
+                Events.id: (BuildContext ctx) => Events(),
+                Chats.id: (BuildContext ctx) => Chats(),
+              },
+              onUnknownRoute: (settings) {
+                return MaterialPageRoute(builder: (_) => PageNotFound());
+              },
             ),
-            initialRoute: Splash.id,
-            routes: {
-              Home.id: (BuildContext ctx) => Home(),
-              Splash.id: (BuildContext ctx) => Splash(),
-              Welcome.id: (BuildContext ctx) => Welcome(),
-              Login.id: (BuildContext ctx) => Login(),
-              Register.id: (BuildContext ctx) => Register(),
-              PasswordReset.id: (BuildContext ctx) => PasswordReset(),
-              PageNotFound.id: (BuildContext ctx) => PageNotFound(),
-              Dashboard.id: (BuildContext ctx) => Dashboard(),
-              Profile.id: (BuildContext ctx) => Profile(),
-              Events.id: (BuildContext ctx) => Events(),
-              Chats.id: (BuildContext ctx) => Chats(),
-            },
-            onUnknownRoute: (settings) {
-              return MaterialPageRoute(builder: (_) => PageNotFound());
-            },
           ),
         ),
       ),
@@ -62,6 +65,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Work on Dashboard')
-//TODO('Work on Password Reset Form Submission to Firestore')
+//TODO('Remodify the dashboard')
+//TODO('Create Ticketing System UI')
+//TODO('Work on Profile Page UI')
+//TODO('Allow Registered User to Change Profile')
 //TODO('Get auth_bg image from the femi/ezenma')

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/validators.dart';
-import 'package:staff_portal/models/user_model.dart';
 import 'package:staff_portal/services/auth_service.dart';
 
 class PasswordResetBloc extends Object with Validators {

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:staff_portal/components/custom_guest_builder.dart';
 import '../components/forms/custom_login_form.dart';
 import 'package:staff_portal/config/constants.dart';
 
@@ -7,14 +8,16 @@ class Login extends StatelessWidget {
   static const id = 'login';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          child: Stack(
-            children: <Widget>[
-              buildDescriptionLayout(context),
-              CustomLoginForm(),
-            ],
+    return CustomGuestBuilder(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Container(
+            child: Stack(
+              children: <Widget>[
+                buildDescriptionLayout(context),
+                CustomLoginForm(),
+              ],
+            ),
           ),
         ),
       ),

@@ -21,4 +21,34 @@ class Validators {
       }
     },
   );
+
+  final validateFirstname = StreamTransformer<String, String>.fromHandlers(
+    handleData: (firstname, sink) {
+      if (firstname.length > 3) {
+        sink.add(firstname);
+      } else {
+        sink.addError('Invalid firstname');
+      }
+    },
+  );
+
+  final validateMiddlename = StreamTransformer<String, String>.fromHandlers(
+    handleData: (middlename, sink) {
+      if (middlename.length > 3) {
+        sink.add(middlename);
+      } else {
+        sink.addError('Invalid middlename');
+      }
+    },
+  );
+
+  final validateLastname = StreamTransformer<String, String>.fromHandlers(
+    handleData: (lastname, sink) {
+      if (lastname.length > 3) {
+        sink.add(lastname);
+      } else {
+        sink.addError('Invalid lastname');
+      }
+    },
+  );
 }

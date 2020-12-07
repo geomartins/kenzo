@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/config/constants.dart';
+import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/password_reset_provider.dart';
 import 'package:staff_portal/views/login.dart';
 import '../custom_flat_button.dart';
 
-class CustomPasswordResetForm extends StatelessWidget {
+class CustomPasswordResetForm extends StatelessWidget with GetSnackbar {
   @override
   Widget build(BuildContext context) {
     final bloc = PasswordResetProvider.of(context);
@@ -61,7 +61,7 @@ class CustomPasswordResetForm extends StatelessWidget {
                                       bloc.loadingSink(true);
                                       try {
                                         await bloc.submit();
-                                        buildSnackbar(
+                                        buildCustomSnackbar(
                                             titleText: 'Successful!!!',
                                             messageText:
                                                 'Password Reset link sent to your email',
@@ -69,7 +69,7 @@ class CustomPasswordResetForm extends StatelessWidget {
                                             iconColor: kPrimaryColor);
                                         Navigator.pushNamed(context, Login.id);
                                       } on PlatformException catch (e) {
-                                        buildSnackbar(
+                                        buildCustomSnackbar(
                                             titleText: 'Ooops!!!',
                                             messageText: e.message,
                                             icon: Icons.error,
@@ -96,28 +96,6 @@ class CustomPasswordResetForm extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  void buildSnackbar(
-      {@required String messageText,
-      @required String titleText,
-      @required Color iconColor,
-      @required IconData icon}) {
-    Get.snackbar(
-      "Oops",
-      'Something Went Wrong',
-      colorText: Colors.black,
-      titleText: Text(
-        titleText,
-        style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2.0),
-      ),
-      messageText: Text(messageText),
-      snackPosition: SnackPosition.BOTTOM,
-      icon: Icon(
-        icon,
-        color: iconColor,
-      ),
     );
   }
 }
