@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:staff_portal/components/custom_guest_builder.dart';
+import 'package:staff_portal/components/builders/custom_guest_builder.dart';
 import 'package:staff_portal/views/welcome.dart';
 
 class Splash extends StatefulWidget {

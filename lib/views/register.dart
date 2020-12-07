@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:staff_portal/components/custom_guest_builder.dart';
+import 'package:staff_portal/components/builders/custom_guest_builder.dart';
 import 'package:staff_portal/components/forms/custom_register_form.dart';
 import 'package:staff_portal/config/constants.dart';
 

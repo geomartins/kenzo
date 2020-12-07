@@ -34,6 +34,7 @@ dependencies:
   get: ^3.21.3
   firebase_user_stream: ^1.1.0
   cloud_firestore: "^0.14.2"
+  shared_preferences: ^0.5.12+4
 
 dev_dependencies:
   flutter_test:

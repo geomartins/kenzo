@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:staff_portal/components/custom_auth_builder.dart';
+import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
+import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/services/auth_service.dart';
 
 class Dashboard extends StatelessWidget {
@@ -10,6 +11,8 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PreferenceProvider.of(context).activeSink(id);
+
     return CustomAuthBuilder(
         child: Scaffold(
       key: _drawerKey,
