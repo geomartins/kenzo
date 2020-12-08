@@ -67,8 +67,15 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+//TODO('Add bottom drawer to Profile Page')
+//TODO('Change Icons on Profile List Tile Accordingly ')
+//TODO('Create Profile Bloc')
+//TODO('Create ProfileModel')
+//TODO('Create Profile Provider and Add it as a parent of MaterialApp')
+//TODO('Fetch Profile info from firestore and update list tile according')
+//TODO('Allow Registered User to Change Profile Pix')
+//TODO('Allow Registered User to change Background pix')
 
-//TODO('Remodify the dashboard')
 //TODO('Create Ticketing System UI')
 //TODO('Work on Profile Page UI')
 //TODO('Allow Registered User to Change Profile')

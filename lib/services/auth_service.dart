@@ -38,7 +38,14 @@ class AuthService {
   }
 
   Future<void> logout() async {
-    await auth.signOut();
+    try {
+      await auth.signOut();
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
   }
 
   Future<void> createAccount(
