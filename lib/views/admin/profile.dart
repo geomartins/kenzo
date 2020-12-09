@@ -202,6 +202,9 @@ class Profile extends StatelessWidget with GetSnackbar {
             String role = snapshot.hasData && snapshot.data != null
                 ? snapshot.data.role
                 : 'unknown';
+            String coverUrl = snapshot.hasData && snapshot.data != null
+                ? snapshot.data.coverUrl
+                : 'unknown';
 
             return Column(
               children: [

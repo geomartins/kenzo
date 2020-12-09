@@ -71,6 +71,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
+//TODO('Add Download in Progress PopUp, then show Success PopUp once done');
+//TODO('Display Cover from Database')
 //TODO('Allow Registered User to Change Profile Pix')
 //TODO('Allow Registered User to change Background pix')
 
