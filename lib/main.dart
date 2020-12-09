@@ -4,6 +4,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/providers/login_provider.dart';
 import 'package:staff_portal/providers/password_reset_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
+import 'package:staff_portal/providers/profile_provider.dart';
 import 'package:staff_portal/providers/register_provider.dart';
 import 'package:staff_portal/views/admin/chats.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
@@ -33,32 +34,34 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return PreferenceProvider(
-      child: RegisterProvider(
-        child: PasswordResetProvider(
-          child: LoginProvider(
-            child: GetMaterialApp(
-              home: MaterialApp(
-                title: kAppName,
-                theme: ThemeData(
-                  primarySwatch: kPrimaryColor,
+      child: ProfileProvider(
+        child: RegisterProvider(
+          child: PasswordResetProvider(
+            child: LoginProvider(
+              child: GetMaterialApp(
+                home: MaterialApp(
+                  title: kAppName,
+                  theme: ThemeData(
+                    primarySwatch: kPrimaryColor,
+                  ),
+                  initialRoute: Splash.id,
+                  routes: {
+                    Home.id: (BuildContext ctx) => Home(),
+                    Splash.id: (BuildContext ctx) => Splash(),
+                    Welcome.id: (BuildContext ctx) => Welcome(),
+                    Login.id: (BuildContext ctx) => Login(),
+                    Register.id: (BuildContext ctx) => Register(),
+                    PasswordReset.id: (BuildContext ctx) => PasswordReset(),
+                    PageNotFound.id: (BuildContext ctx) => PageNotFound(),
+                    Dashboard.id: (BuildContext ctx) => Dashboard(),
+                    Profile.id: (BuildContext ctx) => Profile(),
+                    Events.id: (BuildContext ctx) => Events(),
+                    Chats.id: (BuildContext ctx) => Chats(),
+                  },
+                  onUnknownRoute: (settings) {
+                    return MaterialPageRoute(builder: (_) => PageNotFound());
+                  },
                 ),
-                initialRoute: Splash.id,
-                routes: {
-                  Home.id: (BuildContext ctx) => Home(),
-                  Splash.id: (BuildContext ctx) => Splash(),
-                  Welcome.id: (BuildContext ctx) => Welcome(),
-                  Login.id: (BuildContext ctx) => Login(),
-                  Register.id: (BuildContext ctx) => Register(),
-                  PasswordReset.id: (BuildContext ctx) => PasswordReset(),
-                  PageNotFound.id: (BuildContext ctx) => PageNotFound(),
-                  Dashboard.id: (BuildContext ctx) => Dashboard(),
-                  Profile.id: (BuildContext ctx) => Profile(),
-                  Events.id: (BuildContext ctx) => Events(),
-                  Chats.id: (BuildContext ctx) => Chats(),
-                },
-                onUnknownRoute: (settings) {
-                  return MaterialPageRoute(builder: (_) => PageNotFound());
-                },
               ),
             ),
           ),
@@ -67,12 +70,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-//TODO('Add bottom drawer to Profile Page')
-//TODO('Change Icons on Profile List Tile Accordingly ')
-//TODO('Create Profile Bloc')
-//TODO('Create ProfileModel')
-//TODO('Create Profile Provider and Add it as a parent of MaterialApp')
-//TODO('Fetch Profile info from firestore and update list tile according')
+
 //TODO('Allow Registered User to Change Profile Pix')
 //TODO('Allow Registered User to change Background pix')
 
