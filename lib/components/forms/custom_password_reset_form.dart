@@ -21,19 +21,20 @@ class CustomPasswordResetForm extends StatelessWidget with GetSnackbar {
                   stream: bloc.isLoading,
                   builder: (context, snapshotx) {
                     return TextField(
-                      enabled: !snapshotx.data,
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(10.0),
-                        labelText: 'Email Address',
-                        errorText: snapshot.error,
-                        border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(10.0),
+                        enabled: !snapshotx.data,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10.0),
+                          labelText: 'Email Address',
+                          errorText: snapshot.error,
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0),
+                            ),
                           ),
                         ),
-                      ),
-                      onChanged: (String newValue) => bloc.emailSink(newValue),
-                    );
+                        onChanged: (String newValue) {
+                          bloc.emailSink(newValue);
+                        });
                   });
             }),
         SizedBox(

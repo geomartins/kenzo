@@ -1,11 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:staff_portal/blocs/profile_bloc.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
+import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/components/custom_outline_button.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
@@ -35,6 +35,12 @@ class Profile extends StatelessWidget with GetSnackbar {
             'Martins Abiodun',
             style: TextStyle(color: Colors.black),
           ),
+          leading: StreamBuilder<bool>(
+              stream: bloc.isLoading,
+              initialData: false,
+              builder: (context, snapshot) {
+                return CustomOffstageProgressIndicator(status: !snapshot.data);
+              }),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
@@ -86,24 +92,34 @@ class Profile extends StatelessWidget with GetSnackbar {
   Widget _buildCover(BuildContext context, ProfileBloc bloc) {
     return Stack(
       children: [
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              scale: 50.0,
-              alignment: Alignment.topCenter,
-              image: AssetImage(
-                'assets/images/martins.jpeg',
-              ),
-            ),
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30.0),
-              topLeft: Radius.circular(30.0),
-            ),
-          ),
-          height: MediaQuery.of(context).size.height / 3,
-        ),
+        StreamBuilder<ProfileModel>(
+            stream: bloc.profile,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                return Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      scale: 50.0,
+                      alignment: Alignment.topCenter,
+                      image: snapshot.hasData && snapshot.data != null
+                          ? NetworkImage(
+                              snapshot.data.coverUrl,
+                            )
+                          : AssetImage(kDefaultCoverUrl),
+                    ),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(30.0),
+                      topLeft: Radius.circular(30.0),
+                    ),
+                  ),
+                  height: MediaQuery.of(context).size.height / 3,
+                );
+              } else {
+                return CustomOffstageProgressIndicator(status: false);
+              }
+            }),
         Positioned(
           child: GestureDetector(
             onTap: () => _editProfileModalBottomSheet(context, bloc),
@@ -129,7 +145,9 @@ class Profile extends StatelessWidget with GetSnackbar {
           decoration: new BoxDecoration(
             color: const Color(0xff7c94b6),
             image: new DecorationImage(
-              image: new AssetImage('assets/images/martins.jpeg'),
+              image: AuthService().getPhotoUrl() != null
+                  ? NetworkImage(AuthService().getPhotoUrl())
+                  : AssetImage(kDefaultProfileUrl),
               fit: BoxFit.cover,
             ),
             borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
@@ -139,14 +157,6 @@ class Profile extends StatelessWidget with GetSnackbar {
             ),
           ),
         ),
-//        ClipOval(
-//          child: Image.asset(
-//            'assets/images/martins.jpeg',
-//            fit: BoxFit.cover,
-//            height: 150.0,
-//            width: 150.0,
-//          ),
-//        )
       ],
     );
   }
@@ -168,7 +178,7 @@ class Profile extends StatelessWidget with GetSnackbar {
         ),
         Expanded(
           child: CustomFlatButton(
-            color: Colors.teal,
+            color: kPrimaryColor,
             title: 'Logout',
             onPressed: () async {
               try {
@@ -201,9 +211,6 @@ class Profile extends StatelessWidget with GetSnackbar {
                 : 'unknown';
             String role = snapshot.hasData && snapshot.data != null
                 ? snapshot.data.role
-                : 'unknown';
-            String coverUrl = snapshot.hasData && snapshot.data != null
-                ? snapshot.data.coverUrl
                 : 'unknown';
 
             return Column(
@@ -247,7 +254,7 @@ class Profile extends StatelessWidget with GetSnackbar {
               ],
             );
           } else {
-            return CircularProgressIndicator();
+            return CustomOffstageProgressIndicator(status: false);
           }
         });
   }
@@ -257,7 +264,8 @@ class Profile extends StatelessWidget with GetSnackbar {
       context: context,
       builder: (BuildContext bc) {
         return Container(
-          child: new Wrap(
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               new ListTile(
                   leading: new Icon(
@@ -266,15 +274,24 @@ class Profile extends StatelessWidget with GetSnackbar {
                   ),
                   title: new Text('Change Profile Cover'),
                   onTap: () async {
-                    await getImage(false, bloc, context);
+                    bloc.loadingSink(true);
                     try {
+                      await getImage(false, bloc, context);
                       await bloc.uploadCover();
+
+                      buildCustomSnackbar(
+                          messageText: 'Image Upload Successful',
+                          titleText: "Success",
+                          iconColor: kPrimaryColor,
+                          icon: Icons.info);
                     } on PlatformException catch (e) {
                       buildCustomSnackbar(
                           messageText: e.message,
                           titleText: "Oops",
                           iconColor: Colors.red,
                           icon: Icons.error);
+                    } finally {
+                      bloc.loadingSink(false);
                     }
                   }),
               new ListTile(
@@ -283,7 +300,27 @@ class Profile extends StatelessWidget with GetSnackbar {
                   color: kPrimaryColor,
                 ),
                 title: new Text('Change Profile Pix'),
-                onTap: () => {},
+                onTap: () async {
+                  bloc.loadingSink(true);
+                  try {
+                    await getImage(false, bloc, context);
+                    await bloc.uploadProfile();
+
+                    buildCustomSnackbar(
+                        messageText: 'Image Upload Successful',
+                        titleText: "Success",
+                        iconColor: kPrimaryColor,
+                        icon: Icons.info);
+                  } on PlatformException catch (e) {
+                    buildCustomSnackbar(
+                        messageText: e.message,
+                        titleText: "Oops",
+                        iconColor: Colors.red,
+                        icon: Icons.error);
+                  } finally {
+                    bloc.loadingSink(false);
+                  }
+                },
               ),
             ],
           ),

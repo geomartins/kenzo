@@ -8,7 +8,6 @@ class FirestoreService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<ProfileModel> getProfileByUID() async {
-//    auth.currentUser.updateProfile()
     String uid = auth.currentUser.uid;
     try {
       DocumentSnapshot snapshot =
@@ -16,6 +15,17 @@ class FirestoreService {
       Map<String, dynamic> data = snapshot.data();
       print(data);
       return ProfileModel.fromFirestore(data);
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
+
+  void updatePhotoURL({String photoURL}) async {
+    try {
+      await auth.currentUser.updateProfile(photoURL: photoURL);
     } catch (e) {
       throw PlatformException(
         code: e.code,

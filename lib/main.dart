@@ -71,12 +71,5 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Add Download in Progress PopUp, then show Success PopUp once done');
-//TODO('Display Cover from Database')
-//TODO('Allow Registered User to Change Profile Pix')
-//TODO('Allow Registered User to change Background pix')
-
 //TODO('Create Ticketing System UI')
-//TODO('Work on Profile Page UI')
-//TODO('Allow Registered User to Change Profile')
 //TODO('Get auth_bg image from the femi/ezenma')

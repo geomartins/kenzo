@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/validators.dart';
 import 'package:staff_portal/models/profile_model.dart';
-import 'package:staff_portal/services/auth_service.dart';
 import 'package:staff_portal/services/firestore_service.dart';
 import 'package:staff_portal/services/storage_service.dart';
 
@@ -42,6 +41,18 @@ class ProfileBloc extends Object with Validators {
       final String downloadUrl = await StorageService()
           .uploadFile(path: 'uploads/cover', image: _image.value);
       FirestoreService().updateCoverUrl(url: downloadUrl);
+      await fetchProfile();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> uploadProfile() async {
+    try {
+      final String downloadUrl = await StorageService()
+          .uploadFile(path: 'uploads/profile', image: _image.value);
+      FirestoreService().updatePhotoURL(photoURL: downloadUrl);
+      await fetchProfile();
     } catch (e) {
       rethrow;
     }

@@ -51,4 +51,10 @@ class Validators {
       }
     },
   );
+
+  final lowerCaseX = StreamTransformer<String, String>.fromHandlers(
+    handleData: (value, sink) {
+      sink.add(value.toLowerCase());
+    },
+  );
 }

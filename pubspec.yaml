@@ -37,6 +37,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   image_picker: ^0.6.7+14
   firebase_storage: ^4.0.1
+  transparent_image: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -37,6 +37,10 @@ class AuthService {
     }
   }
 
+  String getPhotoUrl() {
+    return auth.currentUser.photoURL;
+  }
+
   Future<void> logout() async {
     try {
       await auth.signOut();

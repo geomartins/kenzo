@@ -1,5 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
-
 class ProfileModel {
   final String email;
   final String role;
