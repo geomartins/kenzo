@@ -7,6 +7,7 @@ import 'package:staff_portal/views/admin/chats.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/admin/events.dart';
 import 'package:staff_portal/views/admin/profile.dart';
+import 'package:staff_portal/views/admin/tickets/tickets.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({
@@ -70,9 +71,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         builder: (context, snapshot) {
           return CustomIconButton(
               icon: Icons.chat_bubble_outline,
-              color: snapshot.data == 'chats' ? Colors.teal : Colors.grey,
+              color: snapshot.data == 'tickets' ? Colors.teal : Colors.grey,
               onPressed: () {
-                Navigator.pushNamed(context, Chats.id);
+                Navigator.pushNamed(context, Tickets.id);
               });
         });
   }

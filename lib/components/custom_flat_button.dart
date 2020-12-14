@@ -6,13 +6,15 @@ class CustomFlatButton extends FlatButton {
   final Color textColor;
   final String title;
   final VoidCallback onPressed;
+  final double radius;
 
-  CustomFlatButton({
-    @required this.color,
-    @required this.textColor,
-    @required this.title,
-    @required this.onPressed,
-  }) : super(
+  CustomFlatButton(
+      {@required this.color,
+      @required this.textColor,
+      @required this.title,
+      @required this.onPressed,
+      this.radius})
+      : super(
           disabledColor: kTertiaryColor,
           color: color,
           child: Text(
@@ -21,7 +23,7 @@ class CustomFlatButton extends FlatButton {
           ),
           onPressed: onPressed,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
+            borderRadius: BorderRadius.circular(radius ?? 5.0),
             //side: BorderSide(color: Colors.red)
           ),
         );
