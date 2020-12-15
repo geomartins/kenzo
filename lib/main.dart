@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/providers/incoming_ticket_provider.dart';
+import 'package:staff_portal/providers/incoming_ticket_response_provider.dart';
 import 'package:staff_portal/providers/login_provider.dart';
 import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
+import 'package:staff_portal/providers/outgoing_ticket_response_provider.dart';
 import 'package:staff_portal/providers/password_reset_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/profile_provider.dart';
@@ -14,7 +16,9 @@ import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/admin/events.dart';
 import 'package:staff_portal/views/admin/profile.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket.dart';
+import 'package:staff_portal/views/admin/tickets/incoming_ticket_response.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket.dart';
+import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
 import 'package:staff_portal/views/admin/tickets/tickets.dart';
 import 'package:staff_portal/views/login.dart';
 import 'package:staff_portal/views/page_not_found.dart';
@@ -41,42 +45,51 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return PreferenceProvider(
       child: TicketsProvider(
-        child: OutgoingTicketProvider(
-          child: IncomingTicketProvider(
-            child: ProfileProvider(
-              child: RegisterProvider(
-                child: PasswordResetProvider(
-                  child: LoginProvider(
-                    child: GetMaterialApp(
-                      home: MaterialApp(
-                        title: kAppName,
-                        theme: ThemeData(
-                          primarySwatch: kPrimaryColor,
+        child: OutgoingTicketResponseProvider(
+          child: OutgoingTicketProvider(
+            child: IncomingTicketResponseProvider(
+              child: IncomingTicketProvider(
+                child: ProfileProvider(
+                  child: RegisterProvider(
+                    child: PasswordResetProvider(
+                      child: LoginProvider(
+                        child: GetMaterialApp(
+                          home: MaterialApp(
+                            title: kAppName,
+                            theme: ThemeData(
+                              primarySwatch: kPrimaryColor,
+                            ),
+                            initialRoute: Splash.id,
+                            routes: {
+                              Home.id: (BuildContext ctx) => Home(),
+                              Splash.id: (BuildContext ctx) => Splash(),
+                              Welcome.id: (BuildContext ctx) => Welcome(),
+                              Login.id: (BuildContext ctx) => Login(),
+                              Register.id: (BuildContext ctx) => Register(),
+                              PasswordReset.id: (BuildContext ctx) =>
+                                  PasswordReset(),
+                              PageNotFound.id: (BuildContext ctx) =>
+                                  PageNotFound(),
+                              Dashboard.id: (BuildContext ctx) => Dashboard(),
+                              Profile.id: (BuildContext ctx) => Profile(),
+                              Events.id: (BuildContext ctx) => Events(),
+                              Chats.id: (BuildContext ctx) => Chats(),
+                              Tickets.id: (BuildContext ctx) => Tickets(),
+                              IncomingTicket.id: (BuildContext ctx) =>
+                                  IncomingTicket(),
+                              OutgoingTicket.id: (BuildContext ctx) =>
+                                  OutgoingTicket(),
+                              IncomingTicketResponse.id: (BuildContext ctx) =>
+                                  IncomingTicketResponse(),
+                              OutgoingTicketResponse.id: (BuildContext ctx) =>
+                                  OutgoingTicketResponse(),
+                            },
+                            onUnknownRoute: (settings) {
+                              return MaterialPageRoute(
+                                  builder: (_) => PageNotFound());
+                            },
+                          ),
                         ),
-                        initialRoute: Splash.id,
-                        routes: {
-                          Home.id: (BuildContext ctx) => Home(),
-                          Splash.id: (BuildContext ctx) => Splash(),
-                          Welcome.id: (BuildContext ctx) => Welcome(),
-                          Login.id: (BuildContext ctx) => Login(),
-                          Register.id: (BuildContext ctx) => Register(),
-                          PasswordReset.id: (BuildContext ctx) =>
-                              PasswordReset(),
-                          PageNotFound.id: (BuildContext ctx) => PageNotFound(),
-                          Dashboard.id: (BuildContext ctx) => Dashboard(),
-                          Profile.id: (BuildContext ctx) => Profile(),
-                          Events.id: (BuildContext ctx) => Events(),
-                          Chats.id: (BuildContext ctx) => Chats(),
-                          Tickets.id: (BuildContext ctx) => Tickets(),
-                          IncomingTicket.id: (BuildContext ctx) =>
-                              IncomingTicket(),
-                          OutgoingTicket.id: (BuildContext ctx) =>
-                              OutgoingTicket(),
-                        },
-                        onUnknownRoute: (settings) {
-                          return MaterialPageRoute(
-                              builder: (_) => PageNotFound());
-                        },
                       ),
                     ),
                   ),
@@ -90,6 +103,6 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Work on the Outgoing Ticket UI')
-//TODO('Work on the Incoming Ticket UI')
+//TODO('Work on the Outgoing Ticket Response UI')
+//TODO('Work on the Incoming Ticket Response UI')
 //TODO('Get auth_bg image from the femi/ezenma')

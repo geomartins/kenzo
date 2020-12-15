@@ -4,7 +4,7 @@ import 'package:staff_portal/mixins/validators.dart';
 import 'package:staff_portal/models/user_model.dart';
 import 'package:staff_portal/services/auth_service.dart';
 
-class LoginBloc extends Object with Validators {
+class OutgoingTicketResponseBloc extends Object with Validators {
   BehaviorSubject _email = new BehaviorSubject<String>();
   BehaviorSubject _password = new BehaviorSubject<String>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
@@ -42,6 +42,8 @@ class LoginBloc extends Object with Validators {
       UserModel user = await AuthService()
           .loginWithEmailAndPassword(validEmail, validPassword);
       if (user != null) {
+        print(user.email);
+        print(user.uid);
         return user;
       } else {
         return null;
@@ -50,12 +52,6 @@ class LoginBloc extends Object with Validators {
       rethrow;
     }
   }
-
-//
-//  //Change Data
-//  Function(String) get changeEmail => _email.sink.add;
-//  Function(String) get changePassword => _password.sink.add;
-//
 
   void dispose() {
     _email.close();

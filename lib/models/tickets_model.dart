@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class TicketsModel {
   final String selectedId;
   final String selectedUrl;

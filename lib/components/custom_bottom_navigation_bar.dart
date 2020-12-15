@@ -3,7 +3,6 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/blocs/preference_bloc.dart';
 import 'package:staff_portal/components/custom_icon_button.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
-import 'package:staff_portal/views/admin/chats.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/admin/events.dart';
 import 'package:staff_portal/views/admin/profile.dart';

@@ -13,7 +13,7 @@ class FirestoreService {
       DocumentSnapshot snapshot =
           await firestore.collection('users').doc(uid).get();
       Map<String, dynamic> data = snapshot.data();
-      print(data);
+//      print(data);
       return ProfileModel.fromFirestore(data);
     } catch (e) {
       throw PlatformException(
