@@ -24,7 +24,7 @@ class CustomTicketsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           color: Colors.grey.shade200,
         ),
-        width: 170.0,
+        width: MediaQuery.of(context).size.width / 2 - 30,
         height: 170.0,
         child: Stack(
           alignment: Alignment.center,
