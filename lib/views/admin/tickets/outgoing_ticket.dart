@@ -6,6 +6,7 @@ import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_outgoing_ticket_list_tile.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
+import 'package:staff_portal/views/admin/tickets/outgoing_ticket_create.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
 
 class OutgoingTicket extends StatelessWidget {
@@ -22,7 +23,9 @@ class OutgoingTicket extends StatelessWidget {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pushNamed(OutgoingTicketCreate.id);
+          },
         ),
         appBar: AppBar(
           leading: GestureDetector(

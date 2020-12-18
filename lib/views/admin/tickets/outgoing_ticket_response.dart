@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
+import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_response_bloc.dart';
@@ -75,7 +76,7 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
                       child: Icon(
@@ -87,6 +88,7 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
                         Navigator.pop(context);
                       },
                     ),
+                    CustomOffstageProgressIndicator(status: false),
                   ],
                 ),
               ),
