@@ -20,7 +20,9 @@ class CustomOutgoingTicketResponseAppbar extends AppBar {
           ),
           leading: GestureDetector(
             child: Icon(Icons.arrow_back_ios_outlined),
-            onTap: leadingOnPressed,
+            onTap: () {
+              leadingOnPressed();
+            },
           ),
           leadingWidth: 10.0,
         );
