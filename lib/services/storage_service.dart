@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
+import 'package:uuid/uuid.dart';
 
 class StorageService {
   firebase_storage.FirebaseStorage storage =
@@ -13,7 +14,7 @@ class StorageService {
   Future<String> uploadFile({File image, String path}) async {
     try {
       final storageReference =
-          storage.ref().child(path).child(auth.currentUser.uid);
+          storage.ref().child(path).child(Uuid().v4());
       final uploadTask = storageReference.putFile(image);
       await uploadTask.onComplete;
       String returnURL;
@@ -28,5 +29,13 @@ class StorageService {
         message: e.message,
       );
     }
+  }
+
+   Future<List<String>> uploadFiles({List<File> images, String path}) async {
+      List<String> result = [];
+      for(File image in images){
+        result.add(await uploadFile(image: image, path: path));
+      }
+      return result;
   }
 }

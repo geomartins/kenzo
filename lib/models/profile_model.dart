@@ -9,4 +9,12 @@ class ProfileModel {
         role = user['role'],
         coverUrl = user['cover_url'],
         department = user['department'];
+
+  Map<String, dynamic> toMap() {
+    return {
+      "email": email,
+      "department": department,
+      "role": role,
+    };
+  }
 }

@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_create_bloc.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/config/constants.dart';
+import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/outgoing_ticket_create_provider.dart';
 import 'package:staff_portal/utilities/camera.dart';
 
 import '../custom_offstage_progress_indicator.dart';
 
-class CustomOutgoingTicketCreateForm extends StatelessWidget {
+class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
   @override
   Widget build(BuildContext context) {
     final bloc = OutgoingTicketCreateProvider.of(context);
+    bloc.fetchDepartmentList();
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildDepartmentField(context),
+        _buildDepartmentField(context, bloc),
         SizedBox(height: 30.0),
-        _buildTitleAndMessageField(context),
+        _buildTitleAndMessageField(context, bloc),
         SizedBox(height: 10.0),
         Camera().views(bloc),
         SizedBox(height: 10.0),
@@ -33,20 +37,64 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-            child: IconButton(
-                color: kTertiaryColor,
-                icon: Icon(FontAwesome.camera),
-                onPressed: () async {
-                  await Camera().openCameraDevice(bloc, context, null);
+            child: StreamBuilder<bool>(
+                stream: bloc.isLoading,
+                initialData: false,
+                builder: (context, isLoadingSnapshot) {
+                  return IconButton(
+                      color: kTertiaryColor,
+                      icon: Icon(FontAwesome.camera),
+                      onPressed: isLoadingSnapshot.data == true
+                          ? null
+                          : () async {
+                              await Camera()
+                                  .openCameraDevice(bloc, context, null);
+                            });
                 })),
         Expanded(
           flex: 6,
-          child: CustomFlatButton(
-              color: kPrimaryColor,
-              textColor: Colors.white,
-              radius: 0.0,
-              title: 'Create',
-              onPressed: () {}),
+          child: StreamBuilder<bool>(
+              stream: bloc.submitValid,
+              initialData: false,
+              builder: (context, snapshot) {
+                return StreamBuilder<bool>(
+                    stream: bloc.isLoading,
+                    initialData: false,
+                    builder: (context, isLoadingSnapshot) {
+                      return CustomFlatButton(
+                          color: kPrimaryColor,
+                          textColor: Colors.white,
+                          radius: 0.0,
+                          title: 'Create',
+                          onPressed: snapshot.data != true ||
+                                  isLoadingSnapshot.data == true
+                              ? null
+                              : () async {
+                                  bloc.loadingSink(true);
+
+                                  try {
+                                    await bloc.submit();
+                                    bloc.clear();
+                                    buildCustomSnackbar(
+                                        titleText: 'Successful!!!',
+                                        messageText:
+                                        'Ticket Created Successfully',
+                                        icon: Icons.info,
+                                        iconColor: kPrimaryColor);
+                                    Navigator.pop(context);
+                                    print('Done Now');
+                                  } on PlatformException catch (e) {
+                                    buildCustomSnackbar(
+                                        titleText: 'Ooops!!!',
+                                        messageText: e.message,
+                                        icon: Icons.error,
+                                        iconColor: Colors.red);
+                                  } finally {
+                                    bloc.loadingSink(false);
+                                  }
+                                });
+                    });
+              }),
         ),
         StreamBuilder<bool>(
             stream: bloc.isLoading,
@@ -65,7 +113,7 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget {
     );
   }
 
-  Widget _buildDepartmentField(context) {
+  Widget _buildDepartmentField(context, OutgoingTicketCreateBloc bloc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -78,38 +126,43 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget {
           ),
         ),
         SizedBox(height: 10.0),
-        DropdownButtonFormField(
-          hint: Text('Department'),
-          value: 'ICT',
-          onChanged: (String value) {
-            print(value);
-          },
-          items: [
-            DropdownMenuItem(
-              child: Text('ICT'),
-              value: 'ICT',
-            ),
-            DropdownMenuItem(
-              child: Text('MARKETING'),
-              value: 'MARKETING',
-            )
-          ],
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: kTertiaryColor.shade200,
-            border: new OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(5.0),
-              ),
-            ),
-          ),
-        ),
+        StreamBuilder<String>(
+            stream: bloc.department,
+            builder: (context, snapshot) {
+              return StreamBuilder<bool>(
+                  stream: bloc.isLoading,
+                  initialData: false,
+                  builder: (context, isLoadingSnapshot) {
+                    return StreamBuilder<List<String>>(
+                        stream: bloc.departmentList,
+                        builder: (context, departmentListSnapshot) {
+                          return DropdownButtonFormField(
+                            hint: Text('Select department'),
+                            onChanged: (newValue) =>
+                                bloc.departmentSink(newValue),
+                            items: _buildDepartmentDropDownMenu(
+                                departmentListSnapshot.data),
+                            decoration: InputDecoration(
+                              enabled: !isLoadingSnapshot.data,
+                              filled: true,
+                              fillColor: kTertiaryColor.shade200,
+                              errorText: snapshot.error,
+                              border: new OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(5.0),
+                                ),
+                              ),
+                            ),
+                          );
+                        });
+                  });
+            }),
       ],
     );
   }
 
-  Widget _buildTitleAndMessageField(context) {
+  Widget _buildTitleAndMessageField(context, OutgoingTicketCreateBloc bloc) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -122,37 +175,74 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget {
           ),
         ),
         SizedBox(height: 9.0),
-        TextField(
-          decoration: InputDecoration(
-            hintText: 'Title',
-            filled: true,
-            fillColor: kTertiaryColor.shade200,
-            border: new OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(5.0),
-              ),
-            ),
-          ),
-        ),
+        StreamBuilder<String>(
+            stream: bloc.title,
+            builder: (context, snapshot) {
+              return StreamBuilder<bool>(
+                  stream: bloc.isLoading,
+                  initialData: false,
+                  builder: (context, isLoadingSnapshot) {
+                    return TextField(
+
+                      enabled: !isLoadingSnapshot.data,
+                      onChanged: (String newValue) => bloc.titleSink(newValue),
+                      decoration: InputDecoration(
+                        hintText: 'Title',
+                        filled: true,
+                        errorText: snapshot.error,
+                        fillColor: kTertiaryColor.shade200,
+                        border: new OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                    );
+                  });
+            }),
         SizedBox(height: 9.0),
-        TextField(
-          minLines: 3,
-          maxLines: 5,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: kTertiaryColor.shade200,
-            hintText: 'Description',
-            hintStyle: TextStyle(),
-            border: new OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: const BorderRadius.all(
-                const Radius.circular(5.0),
-              ),
-            ),
-          ),
-        ),
+        StreamBuilder<String>(
+            stream: bloc.description,
+            builder: (context, snapshot) {
+              return StreamBuilder<bool>(
+                  stream: bloc.isLoading,
+                  initialData: false,
+                  builder: (context, isLoadingSnapshot) {
+                    return TextField(
+                      enabled: !isLoadingSnapshot.data,
+                      minLines: 3,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: kTertiaryColor.shade200,
+                        hintText: 'Description',
+                        errorText: snapshot.error,
+                        hintStyle: TextStyle(),
+                        border: new OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: const BorderRadius.all(
+                            const Radius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                      onChanged: (String newValue) =>
+                          bloc.descriptionSink(newValue),
+                    );
+                  });
+            }),
       ],
     );
+  }
+
+  List<DropdownMenuItem> _buildDepartmentDropDownMenu(List<String> datas) {
+    List<DropdownMenuItem> result = [];
+    for (String department in datas ?? []) {
+      result.add(DropdownMenuItem(
+        child: Text(department),
+        value: department,
+      ));
+    }
+    return result;
   }
 }
