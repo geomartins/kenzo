@@ -6,13 +6,19 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/outgoing_ticket_create_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 
 class OutgoingTicketCreate extends StatelessWidget with GetSnackbar {
   static const id = 'outgoing_ticket_create';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
+  OutgoingTicketCreate() {
+    FirebaseMessagingService().topicSubscription(topic: 'ticket');
+  }
+
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketCreateProvider.of(context);
 

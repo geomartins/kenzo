@@ -43,6 +43,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey =
+      new GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return PreferenceProvider(
@@ -58,6 +61,7 @@ class _MyAppState extends State<MyApp> {
                         child: LoginProvider(
                           child: GetMaterialApp(
                             home: MaterialApp(
+                              navigatorKey: navigatorKey,
                               title: kAppName,
                               theme: ThemeData(
                                 primarySwatch: kPrimaryColor,
@@ -109,6 +113,7 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Work on push notification on submit to department_to')
+//TODO('Work on getting all tickets (Open, Closed, InProgress')
+//TODO('Work on searching the ticket collection')
 //TODO('Work on the Incoming Ticket Response UI')
 //TODO('Get auth_bg image from the femi/ezenma')

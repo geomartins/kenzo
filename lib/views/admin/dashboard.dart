@@ -4,14 +4,16 @@ import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/services/auth_service.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 
 class Dashboard extends StatelessWidget {
   static const id = 'dashboard';
-  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
+  final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   @override
   Widget build(BuildContext context) {
-    PreferenceProvider.of(context).activeSink(id);
+    FirebaseMessagingService().configure(context);
+    PreferenceProvider.of(context).activeSink(Dashboard.id);
 
     return CustomAuthBuilder(
         child: Scaffold(
