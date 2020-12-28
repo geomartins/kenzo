@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/validators.dart';
 import 'package:staff_portal/models/profile_model.dart';
-import 'package:staff_portal/models/user_model.dart';
-import 'package:staff_portal/services/auth_service.dart';
 import 'package:staff_portal/services/firestore_service.dart';
 
 class OutgoingTicketBloc extends Object with Validators {

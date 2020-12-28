@@ -98,7 +98,7 @@ class OutgoingTicket extends StatelessWidget {
         initialData: null,
         builder: (context, departmentSnapshot) {
           return StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance
+              stream: FirebaseFirestore.instance
                   .collection('tickets')
                   .where('from_department', isEqualTo: departmentSnapshot.data)
                   .where('status', isEqualTo: status)
@@ -111,7 +111,6 @@ class OutgoingTicket extends StatelessWidget {
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CustomOutgoingTicketLoadingContainer();
-                  //return CustomOffstageProgressIndicator(status: false);
                 }
 
                 return ListView(
@@ -122,8 +121,6 @@ class OutgoingTicket extends StatelessWidget {
 
                   final ticketModel = TicketModel.fromMap(recievedDocument);
                   print(ticketModel.id);
-                  // print(
-                  //     '${ticketModel.createdAt.toDate()} ${ticketModel.createdAt.toDate().runtimeType}');
 
                   return CustomOutgoingTicketListTile(
                     title: ticketModel.title,
