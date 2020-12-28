@@ -39,6 +39,7 @@ dependencies:
   transparent_image: ^1.0.0
   uuid: 2.2.2
   firebase_messaging: ^7.0.3
+  intl: ^0.16.1
 
 dev_dependencies:
   flutter_test:

@@ -21,6 +21,9 @@ import 'package:staff_portal/utilities/camera.dart';
 class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
   static const id = 'outgoing_ticket_response';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final String ticketID;
+
+  OutgoingTicketResponse({this.ticketID});
 
   @override
   Widget build(BuildContext context) {

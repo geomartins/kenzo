@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:staff_portal/models/department_model.dart';
 import 'package:staff_portal/models/profile_model.dart';
+import 'package:staff_portal/models/ticket_model.dart';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -118,5 +119,17 @@ class FirestoreService {
         message: e.message,
       );
     }
+  }
+
+  List<TicketModel> getTickets() {
+    List<TicketModel> result = [];
+    firestore.collection('tickets').get().then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        final ticketModel = TicketModel.fromMap(doc.data());
+        result.add(ticketModel);
+      });
+    });
+
+    return result;
   }
 }
