@@ -6,6 +6,8 @@ import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/admin/events.dart';
 import 'package:staff_portal/views/admin/profile.dart';
+import 'package:staff_portal/views/admin/tickets/incoming_ticket.dart';
+import 'package:staff_portal/views/admin/tickets/outgoing_ticket.dart';
 import 'package:staff_portal/views/admin/tickets/tickets.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -27,8 +29,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _buildDashboard(bloc, context),
-          _buildEvents(bloc, context),
-          _buildChats(bloc, context),
+          _buildIncomingTicket(bloc, context),
+          _buildOutgoingTicket(bloc, context),
           _buildProfile(bloc, context),
           _buildModule(bloc, context),
         ],
@@ -43,6 +45,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         return CustomIconButton(
           icon: Icons.home,
           color: snapshot.data == 'dashboard' ? Colors.teal : Colors.grey,
+          title: 'Dashboard',
           onPressed: () {
             Navigator.pushNamed(context, Dashboard.id);
           },
@@ -51,28 +54,34 @@ class CustomBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  Widget _buildEvents(PreferenceBloc bloc, BuildContext context) {
+  Widget _buildIncomingTicket(PreferenceBloc bloc, BuildContext context) {
     return StreamBuilder<String>(
         stream: bloc.isActive,
         builder: (context, snapshot) {
           return CustomIconButton(
-              icon: Icons.timeline,
-              color: snapshot.data == 'events' ? Colors.teal : Colors.grey,
+              icon: Icons.inbox_outlined,
+              color: snapshot.data == 'incoming_ticket'
+                  ? Colors.teal
+                  : Colors.grey,
+              title: 'Incoming',
               onPressed: () {
-                Navigator.pushNamed(context, Events.id);
+                Navigator.pushNamed(context, IncomingTicket.id);
               });
         });
   }
 
-  Widget _buildChats(PreferenceBloc bloc, BuildContext context) {
+  Widget _buildOutgoingTicket(PreferenceBloc bloc, BuildContext context) {
     return StreamBuilder<String>(
         stream: bloc.isActive,
         builder: (context, snapshot) {
           return CustomIconButton(
-              icon: Icons.chat_bubble_outline,
-              color: snapshot.data == 'tickets' ? Colors.teal : Colors.grey,
+              icon: Icons.outbox,
+              color: snapshot.data == 'outgoing_ticket'
+                  ? Colors.teal
+                  : Colors.grey,
+              title: 'Outgoing',
               onPressed: () {
-                Navigator.pushNamed(context, Tickets.id);
+                Navigator.pushNamed(context, OutgoingTicket.id);
               });
         });
   }
@@ -84,6 +93,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           return CustomIconButton(
               icon: FontAwesome.user_o,
               color: snapshot.data == 'profile' ? Colors.teal : Colors.grey,
+              title: 'Profile',
               onPressed: () {
                 Navigator.pushNamed(context, Profile.id);
               });
@@ -97,6 +107,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           return CustomIconButton(
               icon: Icons.menu,
               color: snapshot.data == 'module' ? Colors.teal : Colors.grey,
+              title: 'Settings',
               onPressed: () {
                 _drawerKey.currentState.openDrawer();
               });
