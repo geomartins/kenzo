@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:staff_portal/models/department_model.dart';
 import 'package:staff_portal/models/profile_model.dart';
 import 'package:staff_portal/models/ticket_model.dart';
+import 'dart:async';
 
 class FirestoreService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -13,7 +14,7 @@ class FirestoreService {
     String uid = auth.currentUser.uid;
     try {
       DocumentSnapshot snapshot =
-          await firestore.collection('users').doc(uid).get();
+      await firestore.collection('users').doc(uid).get();
       Map<String, dynamic> data = snapshot.data();
 //      print(data);
       return ProfileModel.fromFirestore(data);
@@ -58,7 +59,7 @@ class FirestoreService {
           .get();
       snapshot.docs.forEach((doc) {
         DepartmentModel departmentModel =
-            DepartmentModel.fromFirestore(doc.data());
+        DepartmentModel.fromFirestore(doc.data());
         result.add(departmentModel.name);
       });
       return result;
@@ -70,18 +71,17 @@ class FirestoreService {
     }
   }
 
-  Future<void> createOutgoingTicket(
-      {String title,
-      String description,
-      String toDepartment,
-      List<String> imageURLs}) async {
+  Future<void> createOutgoingTicket({String title,
+    String description,
+    String toDepartment,
+    List<String> imageURLs}) async {
     try {
       DocumentReference userReference = FirebaseFirestore.instance
           .collection('users')
           .doc(auth.currentUser.uid);
 
       DocumentReference ticketReference =
-          FirebaseFirestore.instance.collection('tickets').doc();
+      FirebaseFirestore.instance.collection('tickets').doc();
 
       // DocumentReference mediaReference = FirebaseFirestore.instance
       //     .collection('tickets')
@@ -96,7 +96,7 @@ class FirestoreService {
           throw Exception("User does not exist!");
         }
         ProfileModel profileModel =
-            ProfileModel.fromFirestore(userSnapshot.data());
+        ProfileModel.fromFirestore(userSnapshot.data());
 
         //
         transaction.set(ticketReference, {
@@ -132,4 +132,12 @@ class FirestoreService {
 
     return result;
   }
+
+
+
 }
+
+
+
+
+

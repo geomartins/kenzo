@@ -21,21 +21,20 @@ import 'package:staff_portal/utilities/camera.dart';
 class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
   static const id = 'outgoing_ticket_response';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
-  final String ticketID;
-
-  OutgoingTicketResponse({this.ticketID});
 
   @override
   Widget build(BuildContext context) {
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketResponseProvider.of(context);
     print('In');
+    bloc.ticketIDSink(ModalRoute.of(context).settings.arguments);
 
     return Scaffold(
       key: _drawerKey,
       bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
       drawer: CustomDrawer(),
       appBar: CustomOutgoingTicketResponseAppbar(
+        bloc: bloc,
         leadingOnPressed: () => Navigator.of(context).pop(),
       ),
       bottomSheet: CustomOutgoingTicketResponseBottomSheet(
@@ -52,6 +51,7 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
           children: [
             SizedBox(height: 10.0),
             CustomOutgoingTicketResponseMetaData(),
+            SizedBox(height: 5.0),
             CustomOutgoingTicketResponseMediaFrame(),
             CustomOutgoingTicketResponseStatusBar(),
             SizedBox(height: 10.0),
