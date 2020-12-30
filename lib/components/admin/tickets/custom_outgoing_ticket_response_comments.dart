@@ -1,54 +1,98 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:staff_portal/blocs/outgoing_ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
+import 'package:staff_portal/models/ticket_response_model.dart';
 
+import '../../custom_offstage_progress_indicator.dart';
 
 class CustomOutgoingTicketResponseComments extends StatelessWidget {
+  final OutgoingTicketResponseBloc bloc;
+  CustomOutgoingTicketResponseComments({@required this.bloc});
+
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        child: Text('MA'),
-        backgroundColor: kPrimaryColor,
-      ),
-      title: Container(
-        padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.0),
-          color: kTertiaryColor.shade100,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Martins Abiodun',
-              style: TextStyle(
-                fontSize: 14.0,
-              ),
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-              style: Theme.of(context).textTheme.caption.copyWith(
-                    fontSize: 15.0,
-                  ),
-            ),
+    return StreamBuilder<List<TicketResponseModel>>(
+        stream: bloc.ticketResponseData,
+        builder: (context, ticketResponseDataSnapshot) {
+          if (ticketResponseDataSnapshot.hasError) {
+            return Text('Something went wrong');
+          }
+          if (ticketResponseDataSnapshot.connectionState ==
+              ConnectionState.waiting) {
+            return CustomOffstageProgressIndicator(status: false);
+          }
+
+          return ticketResponseDataSnapshot.data.length < 1
+              ? Container()
+              : ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  reverse: true,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: ticketResponseDataSnapshot.data.length,
+                  itemBuilder: (context, int index) {
+                    final data = ticketResponseDataSnapshot.data[index];
+                    final fullname = data.user['firstname'];
+                    final reply = data.reply;
+                    final createdAt = data.createdAt;
+                    // final List<dynamic> images = data.images;
+
+                    return ListTile(
+                      leading: CircleAvatar(
+                        child: Text(data.user['firstname']
+                            .toString()
+                            .substring(0, 2)
+                            .toUpperCase()),
+                        backgroundColor: kPrimaryColor,
+                      ),
+                      title: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: kTertiaryColor.shade100,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              fullname ?? 'fffffffff',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            Text(
+                              reply,
+                              style:
+                                  Theme.of(context).textTheme.caption.copyWith(
+                                        fontSize: 15.0,
+                                      ),
+                            ),
 //            _buildMediaFrame(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SizedBox(height: 5.0),
-                Text(
-                  '2020-04-51 8am',
-                  textAlign: TextAlign.right,
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                      fontSize: 14.0,
-                      fontStyle: FontStyle.italic,
-                      color: kTertiaryColor.shade400),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                SizedBox(height: 5.0),
+                                Text(
+                                  createdAt.toDate().toString(),
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(
+                                          fontSize: 14.0,
+                                          fontStyle: FontStyle.italic,
+                                          color: kTertiaryColor.shade400),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+        });
   }
 }

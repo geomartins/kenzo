@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/blocs/tickets_bloc.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
-import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_tickets_card.dart';

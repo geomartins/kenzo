@@ -1,4 +1,7 @@
 class ProfileModel {
+  final String firstname;
+  final String lastname;
+  final String middlename;
   final String email;
   final String role;
   final String department;
@@ -6,6 +9,9 @@ class ProfileModel {
 
   ProfileModel.fromFirestore(Map<String, dynamic> user)
       : email = user['email'],
+        firstname = user['firstname'],
+        middlename = user['middlename'],
+        lastname = user['lastname'],
         role = user['role'],
         coverUrl = user['cover_url'],
         department = user['department'];
@@ -15,6 +21,9 @@ class ProfileModel {
       "email": email,
       "department": department,
       "role": role,
+      "firstname": firstname,
+      "middlename": middlename,
+      "lastname": lastname,
     };
   }
 }

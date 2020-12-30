@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:staff_portal/providers/outgoing_ticket_response_provider.dart';
 
 class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget {
   final VoidCallback cameraOnPressed;
   final VoidCallback fileOnPressed;
   final String responseType;
+  final replyController = new TextEditingController();
+  final ScrollController scrollController;
 
   CustomOutgoingTicketResponseBottomSheet(
-      {this.cameraOnPressed, this.fileOnPressed, this.responseType = 'text'});
+      {this.cameraOnPressed,
+      this.fileOnPressed,
+      this.responseType = 'text',
+      this.scrollController});
   @override
   Widget build(BuildContext context) {
+    final bloc = OutgoingTicketResponseProvider.of(context);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       child: Row(
@@ -21,11 +29,27 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget {
           Expanded(
               flex: 6,
               child: TextField(
+                controller: replyController,
+                maxLines: null,
+                onChanged: (String newValue) {
+                  bloc.replySink(newValue);
+                },
                 decoration: InputDecoration(
                   hintText: 'Write a response ...',
                   fillColor: Colors.grey.shade100,
                   filled: true,
-                  suffixIcon: Icon(Icons.schedule_send),
+                  suffixIcon: GestureDetector(
+                    child: Icon(Icons.schedule_send),
+                    onTap: () async {
+                      await bloc.submit();
+                      replyController.clear();
+                      scrollController.jumpTo(
+                          scrollController.position.maxScrollExtent + 500.0);
+                      // print(scrollController);
+                      // print(MediaQuery.of(context).size.height + 300.0);
+                      // print(scrollController.position.maxScrollExtent);
+                    },
+                  ),
                   border: new OutlineInputBorder(
                     borderSide: BorderSide.none,
                     borderRadius: const BorderRadius.all(
@@ -37,7 +61,7 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget {
         ],
       ),
       width: double.infinity,
-      height: 70.0,
+      height: 100.0,
       color: Colors.white30,
     );
   }

@@ -113,7 +113,9 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Work on getting all tickets (Open, Closed, InProgress')
+//TODO('Image Zoom')
+//TODO('Change of Status')
+//TODO('Media Frame')
 //TODO('Work on searching the ticket collection')
 //TODO('Work on the Incoming Ticket Response UI')
 //TODO('Get auth_bg image from the femi/ezenma')

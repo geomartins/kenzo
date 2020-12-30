@@ -5,6 +5,7 @@ import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/config/constants.dart';
+import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_response_bloc.dart';
 
@@ -21,6 +22,7 @@ import 'package:staff_portal/utilities/camera.dart';
 class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
   static const id = 'outgoing_ticket_response';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final scrollController = new ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,38 +31,77 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
     print('In');
     bloc.ticketIDSink(ModalRoute.of(context).settings.arguments);
 
-    return Scaffold(
-      key: _drawerKey,
-      bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-      drawer: CustomDrawer(),
-      appBar: CustomOutgoingTicketResponseAppbar(
-        bloc: bloc,
-        leadingOnPressed: () => Navigator.of(context).pop(),
-      ),
-      bottomSheet: CustomOutgoingTicketResponseBottomSheet(
-        cameraOnPressed: () async {
-          await Camera().openCameraDevice(bloc, context, _showCameraModal);
-        },
-        fileOnPressed: () async {
-          await _openFile();
-        },
-      ),
-      body: Container(
-        width: double.infinity,
-        child: ListView(
-          children: [
-            SizedBox(height: 10.0),
-            CustomOutgoingTicketResponseMetaData(),
-            SizedBox(height: 5.0),
-            CustomOutgoingTicketResponseMediaFrame(),
-            CustomOutgoingTicketResponseStatusBar(),
-            SizedBox(height: 10.0),
-            CustomOutgoingTicketResponseComments(),
-            SizedBox(height: 100.0),
-          ],
-        ),
-      ),
-    );
+    return StreamBuilder<String>(
+        stream: bloc.ticketID,
+        builder: (context, ticketIDSnapshot) {
+          if (ticketIDSnapshot.hasError) {
+            return Scaffold(body: Text('Something went wrong'));
+          }
+          if (ticketIDSnapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+                body: CustomOffstageProgressIndicator(status: false));
+          }
+
+          return StreamBuilder<TicketModel>(
+              stream: bloc.ticketData,
+              builder: (context, ticketDataSnapshot) {
+                if (ticketDataSnapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+                if (ticketDataSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Scaffold(
+                      body: CustomOffstageProgressIndicator(status: false));
+                }
+                return Scaffold(
+                  key: _drawerKey,
+                  bottomNavigationBar:
+                      CustomBottomNavigationBar(drawerKey: _drawerKey),
+                  drawer: CustomDrawer(),
+                  appBar: CustomOutgoingTicketResponseAppbar(
+                    bloc: bloc,
+                    data: ticketDataSnapshot.data,
+                    leadingOnPressed: () => Navigator.of(context).pop(),
+                  ),
+                  bottomSheet: CustomOutgoingTicketResponseBottomSheet(
+                    scrollController: scrollController,
+                    cameraOnPressed: () async {
+                      await Camera()
+                          .openCameraDevice(bloc, context, _showCameraModal);
+                    },
+                    fileOnPressed: () async {
+                      await _openFile();
+                    },
+                  ),
+                  body: SingleChildScrollView(
+                    controller: scrollController,
+                    physics: ScrollPhysics(),
+                    child: Container(
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10.0),
+                          CustomOutgoingTicketResponseMetaData(
+                            data: ticketDataSnapshot.data,
+                          ),
+                          SizedBox(height: 5.0),
+                          CustomOutgoingTicketResponseMediaFrame(
+                            data: ticketDataSnapshot.data,
+                          ),
+                          CustomOutgoingTicketResponseStatusBar(
+                            data: ticketDataSnapshot.data,
+                          ),
+                          SizedBox(height: 10.0),
+                          CustomOutgoingTicketResponseComments(
+                            bloc: bloc,
+                          ),
+                          SizedBox(height: 150.0),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              });
+        });
   }
 
   void _showCameraModal(BuildContext context, OutgoingTicketResponseBloc bloc) {
