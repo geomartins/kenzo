@@ -65,6 +65,7 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
                   ),
                   bottomSheet: CustomOutgoingTicketResponseBottomSheet(
                     scrollController: scrollController,
+                    initialText: bloc.validReply,
                     cameraOnPressed: () async {
                       await Camera()
                           .openCameraDevice(bloc, context, _showCameraModal);
@@ -106,46 +107,67 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
 
   void _showCameraModal(BuildContext context, OutgoingTicketResponseBloc bloc) {
     showModalBottomSheet(
+      isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,
       context: context,
       builder: (BuildContext bc) {
-        return Container(
-          height: double.infinity,
-          child: new Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      child: Icon(
-                        FontAwesome.close,
-                        color: kTertiaryColor,
-                      ),
-                      onTap: () {
-                        bloc.imagesSink(null);
-                        Navigator.pop(context);
-                      },
-                    ),
-                    CustomOffstageProgressIndicator(status: false),
-                  ],
-                ),
-              ),
-              Camera().views(bloc),
-              //CustomOutgoingTicketResponseMediaFrame(),
-              CustomOutgoingTicketResponseBottomSheet(
-                cameraOnPressed: () async {
-                  await Camera().openCameraDevice(bloc, context, null);
-                },
-                responseType: 'camera',
-              ),
+        return Scaffold(
+          body: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: StreamBuilder<bool>(
+                  stream: bloc.isLoading,
+                  initialData: false,
+                  builder: (context, isLoadingSnapshot) {
+                    return new Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                child: Icon(
+                                  FontAwesome.close,
+                                  color: isLoadingSnapshot.data == false
+                                      ? kPrimaryColor
+                                      : kTertiaryColor,
+                                ),
+                                onTap: isLoadingSnapshot.data == false
+                                    ? () {
+                                        bloc.imagesSink(null);
+                                        Navigator.pop(context);
+                                      }
+                                    : null,
+                              ),
+                              CustomOffstageProgressIndicator(
+                                  status: !isLoadingSnapshot.data)
+                            ],
+                          ),
+                        ),
+                        Camera().views(bloc),
+                        //CustomOutgoingTicketResponseMediaFrame(),
+
+                        CustomOutgoingTicketResponseBottomSheet(
+                          scrollController: scrollController,
+                          cameraOnPressed: () async {
+                            await Camera()
+                                .openCameraDevice(bloc, context, null);
+                          },
+                          responseType: 'camera',
+                          initialText: bloc.validReply,
+                        ),
 
 //              _buildResponseBottomSheet(context),
-            ],
+                      ],
+                    );
+                  }),
+            ),
           ),
         );
       },

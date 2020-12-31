@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/outgoing_ticket_response_provider.dart';
 
-class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget {
+class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget
+    with GetSnackbar {
   final VoidCallback cameraOnPressed;
   final VoidCallback fileOnPressed;
   final String responseType;
-  final replyController = new TextEditingController();
   final ScrollController scrollController;
+  final String initialText;
 
   CustomOutgoingTicketResponseBottomSheet(
       {this.cameraOnPressed,
       this.fileOnPressed,
       this.responseType = 'text',
-      this.scrollController});
+      @required this.scrollController,
+      this.initialText});
   @override
   Widget build(BuildContext context) {
     final bloc = OutgoingTicketResponseProvider.of(context);
+    final replyController = new TextEditingController(text: initialText ?? '');
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
@@ -28,36 +38,70 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget {
           _buildIcons(),
           Expanded(
               flex: 6,
-              child: TextField(
-                controller: replyController,
-                maxLines: null,
-                onChanged: (String newValue) {
-                  bloc.replySink(newValue);
-                },
-                decoration: InputDecoration(
-                  hintText: 'Write a response ...',
-                  fillColor: Colors.grey.shade100,
-                  filled: true,
-                  suffixIcon: GestureDetector(
-                    child: Icon(Icons.schedule_send),
-                    onTap: () async {
-                      await bloc.submit();
-                      replyController.clear();
-                      scrollController.jumpTo(
-                          scrollController.position.maxScrollExtent + 500.0);
-                      // print(scrollController);
-                      // print(MediaQuery.of(context).size.height + 300.0);
-                      // print(scrollController.position.maxScrollExtent);
-                    },
-                  ),
-                  border: new OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(40.0),
-                    ),
-                  ),
-                ),
-              ))
+              child: StreamBuilder<String>(
+                  stream: bloc.reply,
+                  builder: (context, snapshot) {
+                    return StreamBuilder<bool>(
+                        stream: bloc.isLoading,
+                        initialData: false,
+                        builder: (context, isLoadingSnapshot) {
+                          return StreamBuilder<bool>(
+                              stream: bloc.submitValid,
+                              builder: (context, submitValidSnapshot) {
+                                return TextField(
+                                  enabled: !isLoadingSnapshot.data,
+                                  controller: replyController,
+                                  maxLines: null,
+                                  onChanged: (String newValue) {
+                                    bloc.replySink(newValue);
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'Write a response ...',
+                                    fillColor: Colors.grey.shade100,
+                                    filled: true,
+                                    suffixIcon: GestureDetector(
+                                      child: Icon(Icons.schedule_send,
+                                          color: submitValidSnapshot.data ==
+                                                      true &&
+                                                  isLoadingSnapshot.data != true
+                                              ? kPrimaryColor
+                                              : kTertiaryColor),
+                                      onTap: submitValidSnapshot.data == true &&
+                                              isLoadingSnapshot.data != true
+                                          ? () async {
+                                              try {
+                                                bloc.loadingSink(true);
+                                                await bloc.submit();
+
+                                                replyController.text = '';
+                                                _scrollToBottom();
+
+                                                if (responseType == 'camera') {
+                                                  Navigator.pop(context);
+                                                }
+                                              } on PlatformException catch (e) {
+                                                buildCustomSnackbar(
+                                                    titleText: 'Oops!!!',
+                                                    messageText: e.message,
+                                                    icon: Icons.error,
+                                                    iconColor: Colors.red);
+                                              } finally {
+                                                bloc.loadingSink(false);
+                                              }
+                                            }
+                                          : null,
+                                    ),
+                                    border: new OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(40.0),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              });
+                        });
+                  }))
         ],
       ),
       width: double.infinity,
@@ -133,5 +177,10 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget {
                 ),
                 onTap: () => fileOnPressed))
         : Container();
+  }
+
+  void _scrollToBottom() {
+    // print(scrollController.offset);
+    scrollController.jumpTo(scrollController.position.maxScrollExtent + 500.0);
   }
 }

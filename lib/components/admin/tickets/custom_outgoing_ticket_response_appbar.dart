@@ -41,6 +41,7 @@ class CustomOutgoingTicketResponseAppbar extends AppBar {
               leadingOnPressed();
             },
           ),
-          leadingWidth: 10.0,
+          leadingWidth: 50.0,
+          titleSpacing: 0.0,
         );
 }

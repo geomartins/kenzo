@@ -61,6 +61,11 @@ class OutgoingTicketResponseBloc extends Object with Validators {
     return _images.value ?? [];
   }
 
+  String get validReply => _reply.value;
+
+  Stream<bool> get submitValid =>
+      Rx.combineLatest2(reply, reply, (e, p) => e.length > 1 ? true : false);
+
   Future<void> submit() async {
     try {
       List<String> imageURLs = await StorageService()
