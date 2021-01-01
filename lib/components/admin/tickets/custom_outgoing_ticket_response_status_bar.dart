@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/blocs/outgoing_ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 
 class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
   final TicketModel data;
-  CustomOutgoingTicketResponseStatusBar({@required this.data})
+  final OutgoingTicketResponseBloc bloc;
+  CustomOutgoingTicketResponseStatusBar(
+      {@required this.data, @required this.bloc})
       : assert(data != null);
 
   @override
@@ -26,12 +29,18 @@ class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                  data.status == 'opened'
-                      ? FontAwesome.heart
-                      : FontAwesome.heart_o,
-                  color:
-                      data.status == 'opened' ? kPrimaryColor : kTertiaryColor),
+              GestureDetector(
+                onTap: () {
+                  bloc.statusSink('opened');
+                },
+                child: Icon(
+                    data.status == 'opened'
+                        ? FontAwesome.heart
+                        : FontAwesome.heart_o,
+                    color: data.status == 'opened'
+                        ? kPrimaryColor
+                        : kTertiaryColor),
+              ),
               SizedBox(width: 5.0),
               Text(
                 'Open',
@@ -42,16 +51,21 @@ class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                  data.status == 'in-progress'
-                      ? FontAwesome.heart
-                      : FontAwesome.heart_o,
-                  color: data.status == 'in-progress'
-                      ? kPrimaryColor
-                      : kTertiaryColor),
+              GestureDetector(
+                onTap: () {
+                  bloc.statusSink('pending');
+                },
+                child: Icon(
+                    data.status == 'pending'
+                        ? FontAwesome.heart
+                        : FontAwesome.heart_o,
+                    color: data.status == 'pending'
+                        ? kPrimaryColor
+                        : kTertiaryColor),
+              ),
               SizedBox(width: 5.0),
               Text(
-                'In Progress',
+                'Pending',
                 style: TextStyle(color: kTertiaryColor),
               ),
             ],
@@ -59,12 +73,19 @@ class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                  data.status == 'closed'
-                      ? FontAwesome.heart
-                      : FontAwesome.heart_o,
-                  color:
-                      data.status == 'closed' ? kPrimaryColor : kTertiaryColor),
+              GestureDetector(
+                onTap: () {
+                  bloc.statusSink('closed');
+                  print('closed');
+                },
+                child: Icon(
+                    data.status == 'closed'
+                        ? FontAwesome.heart
+                        : FontAwesome.heart_o,
+                    color: data.status == 'closed'
+                        ? kPrimaryColor
+                        : kTertiaryColor),
+              ),
               SizedBox(width: 5.0),
               Text(
                 'Closed',

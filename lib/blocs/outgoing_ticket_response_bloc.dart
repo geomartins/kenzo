@@ -14,6 +14,8 @@ class OutgoingTicketResponseBloc extends Object with Validators {
   BehaviorSubject _images = new BehaviorSubject<List<File>>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
 
+  BehaviorSubject _status = new BehaviorSubject<String>();
+
   void ticketIDSink(String value) {
     _ticketID.add(value);
   }
@@ -28,6 +30,11 @@ class OutgoingTicketResponseBloc extends Object with Validators {
 
   void loadingSink(bool value) {
     _isLoading.sink.add(value);
+  }
+
+  void statusSink(String value) {
+    _status.add(value);
+    updateStatus();
   }
 
   //STREAMS
@@ -77,10 +84,21 @@ class OutgoingTicketResponseBloc extends Object with Validators {
     }
   }
 
+  Future<void> updateStatus() async {
+    try {
+      FirestoreService()
+          .updateTicketStatus(status: _status.value, ticketID: _ticketID.value);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   void dispose() {
     _ticketID.close();
     _reply.close();
     _images.close();
     _isLoading.close();
+
+    _status.close();
   }
 }

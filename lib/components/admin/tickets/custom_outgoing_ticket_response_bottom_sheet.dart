@@ -25,9 +25,9 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget
     final bloc = OutgoingTicketResponseProvider.of(context);
     final replyController = new TextEditingController(text: initialText ?? '');
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollToBottom();
-    });
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   _scrollToBottom();
+    // });
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),

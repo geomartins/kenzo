@@ -5,6 +5,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_response_model.dart';
 
 import '../../custom_offstage_progress_indicator.dart';
+import 'custom_outgoing_ticket_response_comment_media_frame.dart';
 
 class CustomOutgoingTicketResponseComments extends StatelessWidget {
   final OutgoingTicketResponseBloc bloc;
@@ -36,6 +37,7 @@ class CustomOutgoingTicketResponseComments extends StatelessWidget {
                     final fullname = data.user['firstname'];
                     final reply = data.reply;
                     final createdAt = data.createdAt;
+
                     // final List<dynamic> images = data.images;
 
                     return ListTile(
@@ -70,6 +72,9 @@ class CustomOutgoingTicketResponseComments extends StatelessWidget {
                                       ),
                             ),
 //            _buildMediaFrame(),
+                            CustomOutgoingTicketResponseCommentMediaFrame(
+                              data: data,
+                            ),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [

@@ -90,6 +90,7 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
                           ),
                           CustomOutgoingTicketResponseStatusBar(
                             data: ticketDataSnapshot.data,
+                            bloc: bloc,
                           ),
                           SizedBox(height: 10.0),
                           CustomOutgoingTicketResponseComments(

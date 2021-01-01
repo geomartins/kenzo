@@ -35,7 +35,7 @@ class CustomOutgoingTicketResponseMetaData extends StatelessWidget {
                     SizedBox(width: 3.0),
                     Text(
                       data.user['firstname'] != null
-                          ? data.user['firstname'] + '' + data.user['lastname']
+                          ? data.user['firstname'] + ' ' + data.user['lastname']
                           : data.user['department'],
                       style: TextStyle(fontSize: 14.0),
                     ),

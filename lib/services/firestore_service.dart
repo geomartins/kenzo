@@ -170,4 +170,15 @@ class FirestoreService {
       );
     }
   }
+
+  Future<void> updateTicketStatus({String ticketID, String status}) async {
+    try {
+      firestore.collection('tickets').doc(ticketID).update({"status": status});
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
 }
