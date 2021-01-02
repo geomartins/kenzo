@@ -10,8 +10,8 @@ class CustomOutgoingTicketListTile extends StatelessWidget {
 
   CustomOutgoingTicketListTile(
       {@required this.onPressed,
-      @required this.title,
-      @required this.department,
+      this.title = 'Not Available',
+      this.department = 'Unknown',
       this.datetime});
 
   @override
@@ -20,7 +20,7 @@ class CustomOutgoingTicketListTile extends StatelessWidget {
       onTap: onPressed,
       child: Card(
         child: ListTile(
-          title: Text(title),
+          title: Text(title ?? 'fffhf'),
           subtitle: Wrap(
             children: [
               Row(
@@ -28,7 +28,7 @@ class CustomOutgoingTicketListTile extends StatelessWidget {
                 children: [
                   Icon(Icons.signal_wifi_4_bar_lock, color: kPrimaryColor),
                   SizedBox(width: 3.0),
-                  Text(department),
+                  Text(department ?? 'Unknown department'),
                 ],
               ),
               SizedBox(width: 20.0),
@@ -44,7 +44,9 @@ class CustomOutgoingTicketListTile extends StatelessWidget {
           ),
           leading: CircleAvatar(
             child: Text(
-              department.substring(0, 2).toUpperCase(),
+              department != null
+                  ? department.substring(0, 2).toUpperCase()
+                  : 'Unknown',
               style: TextStyle(color: Colors.white),
             ),
             backgroundColor: Colors.teal,

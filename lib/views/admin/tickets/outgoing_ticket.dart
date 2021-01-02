@@ -1,7 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_bloc.dart';
+import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_search.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_outgoing_ticket_loading_container.dart';
@@ -46,9 +46,9 @@ class OutgoingTicket extends StatelessWidget {
             actions: [
               IconButton(
                 onPressed: () async {
-                  final TicketModel result = await showSearch(
-                      context: context, delegate: TicketSearch(bloc.result));
-                  print(result.title);
+                  await showSearch(
+                      context: context,
+                      delegate: CustomOutgoingTicketSearch(bloc.allTickets));
                 },
                 icon: Icon(Icons.search),
               )
@@ -74,7 +74,7 @@ class OutgoingTicket extends StatelessWidget {
                 ),
                 Tab(
                   child:
-                      Text('ONGOING', style: TextStyle(color: Colors.black54)),
+                      Text('PENDING', style: TextStyle(color: Colors.black54)),
                 ),
                 Tab(
                   child:
@@ -86,183 +86,64 @@ class OutgoingTicket extends StatelessWidget {
           key: _drawerKey,
           bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
           drawer: CustomDrawer(),
-          body: TabBarView(
-            children: [
-              // _buildAllTickets(context),
-              _buildTickets(context, bloc, 'opened'),
-              _buildTickets(context, bloc, 'ongoing'),
-              _buildTickets(context, bloc, 'closed'),
-            ],
-          ),
+          body: StreamBuilder<String>(
+              stream: bloc.department,
+              initialData: null,
+              builder: (context, departmentSnapshot) {
+                return StreamBuilder<List<TicketModel>>(
+                    stream: bloc.allTickets,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<TicketModel>> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CustomOutgoingTicketLoadingContainer();
+                      }
+
+                      final List<TicketModel> openedTickets = snapshot.data
+                          .where((element) => element.status == 'opened')
+                          .toList();
+                      final List<TicketModel> closedTickets = snapshot.data
+                          .where((element) => element.status == 'closed')
+                          .toList();
+                      final List<TicketModel> pendingTickets = snapshot.data
+                          .where((element) => element.status == 'pending')
+                          .toList();
+                      return TabBarView(
+                        children: [
+                          _buildTickets(context, openedTickets),
+                          _buildTickets(context, pendingTickets),
+                          _buildTickets(context, closedTickets),
+                        ],
+                      );
+                    });
+              }),
+          // body: TabBarView(
+          //   children: [
+          //     // _buildAllTickets(context),
+          //     _buildTickets(context, bloc, 'opened'),
+          //     Text('Outgoing'),
+          //     Text('Closed')
+          //   ],
+          // ),
         ),
       ),
     );
   }
 
-  Widget _buildTickets(
-      BuildContext context, OutgoingTicketBloc bloc, String status) {
-    return StreamBuilder<String>(
-        stream: bloc.department,
-        initialData: null,
-        builder: (context, departmentSnapshot) {
-          return StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('tickets')
-                  .where('from_department', isEqualTo: departmentSnapshot.data)
-                  .where('status', isEqualTo: status)
-                  .orderBy('created_at', descending: true)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CustomOutgoingTicketLoadingContainer();
-                }
-
-                return ListView(
-                    children:
-                        snapshot.data.docs.map((DocumentSnapshot document) {
-                  Map<String, dynamic> recievedDocument = document.data();
-                  recievedDocument['id'] = document.id;
-
-                  final ticketModel = TicketModel.fromMap(recievedDocument);
-                  print(ticketModel.id);
-
-                  return CustomOutgoingTicketListTile(
-                    title: ticketModel.title,
-                    department: ticketModel.toDepartment,
-                    datetime: ticketModel.createdAt.toDate(),
-                    onPressed: () => Navigator.pushNamed(
-                        context, OutgoingTicketResponse.id,
-                        arguments: ticketModel.id),
-                  );
-                }).toList());
-              });
-        });
-  }
-}
-
-class TicketSearch extends SearchDelegate<TicketModel> {
-  final Stream<List<TicketModel>> ticketModels;
-  Iterable<TicketModel> resultList = [];
-
-  TicketSearch(this.ticketModels);
-
-  @override
-  String get searchFieldLabel => 'Search Ticket';
-
-  @override
-  TextStyle get searchFieldStyle => TextStyle(
-        color: kTertiaryColor,
-        fontSize: 16.0,
-      );
-  //@override
-  // ThemeData appBarTheme(BuildContext context) {
-  //   assert(context != null);
-  //   final ThemeData theme = Theme.of(context).copyWith(
-  //     textTheme: TextTheme(
-  //       headline6: TextStyle(
-  //         color: Colors.white,
-  //         fontSize: 18.0,
-  //       ),
-  //     ),
-  //     appBarTheme: AppBarTheme(color: Colors.white, elevation: 0.0),
-  //   );
-  //   assert(theme != null);
-  //   return theme;
-  // }
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-          icon: Icon(Icons.clear),
-          onPressed: () {
-            query = '';
-          })
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          close(context, null);
-        });
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return ListView(
-      children: resultList
-          .map<ListTile>((a) => ListTile(
-                title: Text(
-                  a.title ?? 'xxx',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subhead
-                      .copyWith(fontSize: 16.0),
-                ),
-                leading: Icon(Icons.book),
-                subtitle: Text(a.description),
-                onTap: () {
-                  close(context, a);
-                },
-              ))
-          .toList(),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return StreamBuilder<List<TicketModel>>(
-      stream: ticketModels,
-      builder: (context, AsyncSnapshot<List<TicketModel>> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: Text('No data'),
+  Widget _buildTickets(BuildContext context, List<TicketModel> datas) {
+    return ListView.builder(
+        itemCount: datas.length,
+        itemBuilder: (BuildContext context, int index) {
+          return CustomOutgoingTicketListTile(
+            title: datas[index].title != null ? datas[index].title : 'UnknowX',
+            department: datas[index].toDepartment,
+            datetime: datas[index].createdAt.toDate(),
+            onPressed: () => Navigator.pushNamed(
+                context, OutgoingTicketResponse.id,
+                arguments: datas[index].id),
           );
-        }
-
-        final results = snapshot.data.where((TicketModel a) {
-          if (a.title != null) {
-            return a.title.toLowerCase().contains(query.toLowerCase());
-          }
-          return false;
         });
-        resultList = results;
-        return ListView(
-          children: results
-              .map<ListTile>((a) => ListTile(
-                    title: Text(
-                      a.title ?? 'xxx',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subhead
-                          .copyWith(fontSize: 16.0, color: kPrimaryColor),
-                    ),
-                    leading: Icon(Icons.book),
-                    subtitle: Text(a.description),
-                    onTap: () {
-                      print(results);
-                      close(context, a);
-                      //query = a.title;
-                    },
-                  ))
-              .toList(),
-        );
-      },
-    );
   }
 }
-
-// return ListView.builder(
-// itemCount: snapshot.data
-//     .where((a) => a.title.toLowerCase().contains(query))
-// .length,
-// itemBuilder: (BuildContext context, int index) {
-// return Text(snapshot.data[index].title ?? 'oopps');
-// },

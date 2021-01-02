@@ -9,10 +9,25 @@ import '../models/ticket_model.dart';
 class OutgoingTicketBloc extends Object with Validators {
   BehaviorSubject _department = new BehaviorSubject<String>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
+  BehaviorSubject _openTickets = new BehaviorSubject<List<TicketModel>>();
+  BehaviorSubject _pendingTickets = new BehaviorSubject<List<TicketModel>>();
+  BehaviorSubject _closedTickets = new BehaviorSubject<List<TicketModel>>();
   BehaviorSubject _result = new BehaviorSubject<List<TicketModel>>();
 
   void departmentSink(String value) {
     _department.sink.add(value);
+  }
+
+  void openTicketsSink(List<TicketModel> value) {
+    _openTickets.sink.add(value);
+  }
+
+  void pendingTicketsSink(List<TicketModel> value) {
+    _pendingTickets.sink.add(value);
+  }
+
+  void closedTicketsSink(List<TicketModel> value) {
+    _closedTickets.sink.add(value);
   }
 
   void loadingSink(bool value) {
@@ -21,17 +36,38 @@ class OutgoingTicketBloc extends Object with Validators {
 
   Stream get department => _department.stream;
   Stream get isLoading => _isLoading.stream;
-  Stream<List<TicketModel>> get result => FirebaseFirestore.instance
+  Stream<List<TicketModel>> get openedTickets => openedTickets.map((data) {
+        return data.where((element) => element.title == 'opened');
+      });
+  Stream<List<TicketModel>> get allTickets => FirebaseFirestore.instance
           .collection('tickets')
           .orderBy('created_at', descending: true)
           .snapshots()
           .map((data) {
         List<TicketModel> result = [];
+
         data.docs.forEach((doc) {
-          result.add(TicketModel.fromMap(doc.data()));
+          Map<String, dynamic> document = doc.data();
+          document['id'] = doc.id;
+          result.add(TicketModel.fromMap(document));
         });
-        return result;
+        return result.toList();
       });
+
+  // Stream<List<TicketModel>> get result => FirebaseFirestore.instance
+  //         .collection('tickets')
+  //         .where('status', isEqualTo: 'opened')
+  //         .orderBy('created_at', descending: true)
+  //         .snapshots()
+  //         .map((data) {
+  //       List<TicketModel> result = [];
+  //       data.docs.forEach((doc) {
+  //         Map<String, dynamic> document = doc.data();
+  //         document['id'] = doc.id;
+  //         result.add(TicketModel.fromMap(document));
+  //       });
+  //       return result;
+  //     });
 
   Future<void> fetchDepartment() async {
     ProfileModel profileModel = await FirestoreService().getProfileByUID();
@@ -43,5 +79,8 @@ class OutgoingTicketBloc extends Object with Validators {
     _department.close();
     _result.close();
     _isLoading.close();
+    _pendingTickets.close();
+    _openTickets.close();
+    _closedTickets.close();
   }
 }
