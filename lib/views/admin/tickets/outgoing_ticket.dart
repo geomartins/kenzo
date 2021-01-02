@@ -146,8 +146,33 @@ class OutgoingTicket extends StatelessWidget {
 
 class TicketSearch extends SearchDelegate<TicketModel> {
   final Stream<List<TicketModel>> ticketModels;
+  Iterable<TicketModel> resultList = [];
 
   TicketSearch(this.ticketModels);
+
+  @override
+  String get searchFieldLabel => 'Search Ticket';
+
+  @override
+  TextStyle get searchFieldStyle => TextStyle(
+        color: kTertiaryColor,
+        fontSize: 16.0,
+      );
+  //@override
+  // ThemeData appBarTheme(BuildContext context) {
+  //   assert(context != null);
+  //   final ThemeData theme = Theme.of(context).copyWith(
+  //     textTheme: TextTheme(
+  //       headline6: TextStyle(
+  //         color: Colors.white,
+  //         fontSize: 18.0,
+  //       ),
+  //     ),
+  //     appBarTheme: AppBarTheme(color: Colors.white, elevation: 0.0),
+  //   );
+  //   assert(theme != null);
+  //   return theme;
+  // }
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -171,40 +196,23 @@ class TicketSearch extends SearchDelegate<TicketModel> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return StreamBuilder<List<TicketModel>>(
-      stream: ticketModels,
-      builder: (context, AsyncSnapshot<List<TicketModel>> snapshot) {
-        if (!snapshot.hasData) {
-          return Center(
-            child: Text('No data'),
-          );
-        }
-
-        final results = snapshot.data.where((TicketModel a) {
-          if (a.title != null) {
-            return a.title.toLowerCase().contains(query);
-          }
-          return false;
-        });
-        return ListView(
-          children: results
-              .map<ListTile>((a) => ListTile(
-                    title: Text(
-                      a.title ?? 'xxx',
-                      style: Theme.of(context)
-                          .textTheme
-                          .subhead
-                          .copyWith(fontSize: 16.0),
-                    ),
-                    leading: Icon(Icons.book),
-                    subtitle: Text(a.description),
-                    onTap: () {
-                      close(context, a);
-                    },
-                  ))
-              .toList(),
-        );
-      },
+    return ListView(
+      children: resultList
+          .map<ListTile>((a) => ListTile(
+                title: Text(
+                  a.title ?? 'xxx',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subhead
+                      .copyWith(fontSize: 16.0),
+                ),
+                leading: Icon(Icons.book),
+                subtitle: Text(a.description),
+                onTap: () {
+                  close(context, a);
+                },
+              ))
+          .toList(),
     );
   }
 
@@ -221,10 +229,11 @@ class TicketSearch extends SearchDelegate<TicketModel> {
 
         final results = snapshot.data.where((TicketModel a) {
           if (a.title != null) {
-            return a.title.toLowerCase().contains(query);
+            return a.title.toLowerCase().contains(query.toLowerCase());
           }
           return false;
         });
+        resultList = results;
         return ListView(
           children: results
               .map<ListTile>((a) => ListTile(
@@ -238,6 +247,7 @@ class TicketSearch extends SearchDelegate<TicketModel> {
                     leading: Icon(Icons.book),
                     subtitle: Text(a.description),
                     onTap: () {
+                      print(results);
                       close(context, a);
                       //query = a.title;
                     },

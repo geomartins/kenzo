@@ -67,8 +67,13 @@ class _MyAppState extends State<MyApp> {
                               navigatorKey: navigatorKey,
                               title: kAppName,
                               theme: ThemeData(
-                                primarySwatch: kPrimaryColor,
-                              ),
+                                  primarySwatch: kPrimaryColor,
+                                  textTheme: TextTheme(
+                                    headline6: TextStyle(
+                                      color: kTertiaryColor,
+                                      fontSize: 18.0,
+                                    ),
+                                  )),
                               initialRoute: Splash.id,
                               routes: {
                                 Home.id: (BuildContext ctx) => Home(),
