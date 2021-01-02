@@ -44,8 +44,16 @@ class OutgoingTicket extends StatelessWidget {
               onTap: () => Navigator.of(context).pop(),
             ),
             actions: [
-              Icon(Icons.search),
-              SizedBox(width: 20.0),
+              IconButton(
+                onPressed: () async {
+                  final TicketModel result = await showSearch(
+                      context: context, delegate: TicketSearch(bloc.result));
+                  print(result.title);
+                },
+                icon: Icon(Icons.search),
+              )
+              // Icon(Icons.search),
+              // SizedBox(width: 20.0),
             ],
             title: Text(
               'Outgoing Tickets',
@@ -135,3 +143,116 @@ class OutgoingTicket extends StatelessWidget {
         });
   }
 }
+
+class TicketSearch extends SearchDelegate<TicketModel> {
+  final Stream<List<TicketModel>> ticketModels;
+
+  TicketSearch(this.ticketModels);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return StreamBuilder<List<TicketModel>>(
+      stream: ticketModels,
+      builder: (context, AsyncSnapshot<List<TicketModel>> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Text('No data'),
+          );
+        }
+
+        final results = snapshot.data.where((TicketModel a) {
+          if (a.title != null) {
+            return a.title.toLowerCase().contains(query);
+          }
+          return false;
+        });
+        return ListView(
+          children: results
+              .map<ListTile>((a) => ListTile(
+                    title: Text(
+                      a.title ?? 'xxx',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .copyWith(fontSize: 16.0),
+                    ),
+                    leading: Icon(Icons.book),
+                    subtitle: Text(a.description),
+                    onTap: () {
+                      close(context, a);
+                    },
+                  ))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return StreamBuilder<List<TicketModel>>(
+      stream: ticketModels,
+      builder: (context, AsyncSnapshot<List<TicketModel>> snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: Text('No data'),
+          );
+        }
+
+        final results = snapshot.data.where((TicketModel a) {
+          if (a.title != null) {
+            return a.title.toLowerCase().contains(query);
+          }
+          return false;
+        });
+        return ListView(
+          children: results
+              .map<ListTile>((a) => ListTile(
+                    title: Text(
+                      a.title ?? 'xxx',
+                      style: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .copyWith(fontSize: 16.0, color: kPrimaryColor),
+                    ),
+                    leading: Icon(Icons.book),
+                    subtitle: Text(a.description),
+                    onTap: () {
+                      close(context, a);
+                      //query = a.title;
+                    },
+                  ))
+              .toList(),
+        );
+      },
+    );
+  }
+}
+
+// return ListView.builder(
+// itemCount: snapshot.data
+//     .where((a) => a.title.toLowerCase().contains(query))
+// .length,
+// itemBuilder: (BuildContext context, int index) {
+// return Text(snapshot.data[index].title ?? 'oopps');
+// },
