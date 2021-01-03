@@ -7,12 +7,14 @@ class CustomOutgoingTicketListTile extends StatelessWidget {
   final String title;
   final String department;
   final datetime;
+  final String status;
 
   CustomOutgoingTicketListTile(
       {@required this.onPressed,
       this.title = 'Not Available',
       this.department = 'Unknown',
-      this.datetime});
+      this.datetime,
+      this.status});
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +28,38 @@ class CustomOutgoingTicketListTile extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.signal_wifi_4_bar_lock, color: kPrimaryColor),
+                  Icon(
+                    Icons.signal_wifi_4_bar_lock,
+                    color: kPrimaryColor,
+                    size: 15.0,
+                  ),
                   SizedBox(width: 3.0),
                   Text(department ?? 'Unknown department'),
                 ],
               ),
               SizedBox(width: 20.0),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.lock_clock, color: kPrimaryColor),
-                  SizedBox(width: 3.0),
-                  Text(DateFormat.yMMMEd().format(datetime)),
-                ],
-              ),
+              datetime != null
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.lock_clock,
+                          color: kPrimaryColor,
+                          size: 15.0,
+                        ),
+                        SizedBox(width: 3.0),
+                        Text(DateFormat.yMMMEd().format(datetime))
+                      ],
+                    )
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.account_tree_sharp,
+                            color: kPrimaryColor, size: 15.0),
+                        SizedBox(width: 3.0),
+                        Text(status != null ? status : 'unknown')
+                      ],
+                    ),
             ],
           ),
           leading: CircleAvatar(

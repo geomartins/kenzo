@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/blocs/outgoing_ticket_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
 import '../../custom_outgoing_ticket_list_tile.dart';
 
 class CustomOutgoingTicketSearch extends SearchDelegate<TicketModel> {
-  final Stream<List<TicketModel>> ticketModels;
-  List<TicketModel> resultList = [];
+  final OutgoingTicketBloc bloc;
 
-  CustomOutgoingTicketSearch(this.ticketModels);
+  CustomOutgoingTicketSearch({this.bloc});
 
   @override
   String get searchFieldLabel => 'Search Ticket';
@@ -41,49 +41,61 @@ class CustomOutgoingTicketSearch extends SearchDelegate<TicketModel> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return ListView.builder(
-      itemCount: resultList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return CustomOutgoingTicketListTile(
-            title: resultList[index].title,
-            department: resultList[index].toDepartment,
-            datetime: resultList[index].createdAt.toDate(),
-            onPressed: () {
-              close(context, null);
-              Navigator.pushNamed(context, OutgoingTicketResponse.id,
-                  arguments: resultList[index].id);
-            });
-      },
-    );
+    return StreamBuilder<List<TicketModel>>(
+        stream: bloc.search,
+        builder: (context, AsyncSnapshot<List<TicketModel>> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: Text('No data'),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              List<TicketModel> results = snapshot.data;
+              return CustomOutgoingTicketListTile(
+                  title: results[index].title,
+                  department: results[index].toDepartment,
+                  status: results[index].status,
+                  onPressed: () {
+                    close(context, null);
+                    Navigator.pushNamed(context, OutgoingTicketResponse.id,
+                        arguments: results[index].id);
+                  });
+            },
+          );
+        });
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    print(query);
+    bloc.searchTicket(query ?? ' ');
     return StreamBuilder<List<TicketModel>>(
-      stream: ticketModels,
+      stream: bloc.search,
       builder: (context, AsyncSnapshot<List<TicketModel>> snapshot) {
+        print('Data ${snapshot.data}');
         if (!snapshot.hasData) {
           return Center(
             child: Text('No data'),
           );
         }
 
-        final results = snapshot.data.where((TicketModel a) {
-          if (a.title != null) {
-            return a.title.toLowerCase().contains(query.toLowerCase());
-          }
-          return false;
-        }).toList();
-        resultList = results;
+        if (snapshot.data.length < 1) {
+          return Center(
+            child: Text('No data found'),
+          );
+        }
+
         return ListView.builder(
-          itemCount: results.length,
+          itemCount: snapshot.data.length,
           itemBuilder: (BuildContext context, int index) {
+            List<TicketModel> results = snapshot.data;
             return CustomOutgoingTicketListTile(
                 title: results[index].title,
                 department: results[index].toDepartment,
-                datetime: results[index].createdAt.toDate(),
+                status: results[index].status,
                 onPressed: () {
-                  print(results[index].id);
                   close(context, null);
                   Navigator.pushNamed(context, OutgoingTicketResponse.id,
                       arguments: results[index].id);

@@ -48,7 +48,7 @@ class OutgoingTicket extends StatelessWidget {
                 onPressed: () async {
                   await showSearch(
                       context: context,
-                      delegate: CustomOutgoingTicketSearch(bloc.allTickets));
+                      delegate: CustomOutgoingTicketSearch(bloc: bloc));
                 },
                 icon: Icon(Icons.search),
               )

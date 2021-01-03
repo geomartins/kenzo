@@ -181,6 +181,8 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget
 
   void _scrollToBottom() {
     // print(scrollController.offset);
+    // double maxScroll = scrollController.position.maxScrollExtent;
+    // double currentScroll = scrollController.position.pixels;
     scrollController.jumpTo(scrollController.position.maxScrollExtent + 500.0);
   }
 }

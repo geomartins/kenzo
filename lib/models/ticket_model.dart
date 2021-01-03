@@ -19,5 +19,5 @@ class TicketModel {
         user = data['user'],
         status = data['status'],
         images = data['images'] ?? [],
-        createdAt = data['created_at'];
+        createdAt = data['created_at'] ?? Timestamp.now();
 }

@@ -1,7 +1,12 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const algoliasearch = require('algoliasearch');
 
-admin.initializeApp();
+const ALGOLIA_APP_ID = 'SDIR2DEWN9';
+const ALGOLIA_ADMIN_KEY = '503416d91974a195dbdbe88d84376c5d';
+const ALGOLIA_INDEX_NAME = 'tickets';
+
+admin.initializeApp(functions.config().firebase);
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -44,3 +49,40 @@ admin.initializeApp();
            }})
            return;
       });
+
+
+      exports.createTicket = functions.firestore
+          .document('tickets/{docId}')
+          .onCreate((snap, context) => {
+                const newValue = snap.data();
+                newValue.objectID = snap.id;
+
+                var client = algoliasearch(ALGOLIA_APP_ID,ALGOLIA_ADMIN_KEY);
+
+                var index = client.initIndex(ALGOLIA_INDEX_NAME);
+                index.saveObject(newValue);
+                console.log('finished');
+
+          });
+
+
+           exports.updateTicket = functions.firestore
+                    .document('tickets/{docId}')
+                    .onUpdate((snap, context) => {
+                          const afterUpdate = snap.after.data();
+                          afterUpdate.objectID = snap.after.id;
+                          var client = algoliasearch(ALGOLIA_APP_ID,ALGOLIA_ADMIN_KEY);
+                          var index = client.initIndex(ALGOLIA_INDEX_NAME);
+                          index.saveObject(afterUpdate);
+
+
+                    });
+
+            exports.deleteTicket = functions.firestore
+                               .document('tickets/{docId}')
+                               .onDelete((snap, context) => {
+                                     const oldID = snap.id;
+                                     var client = algoliasearch(ALGOLIA_APP_ID,ALGOLIA_ADMIN_KEY);
+                                     var index = client.initIndex(ALGOLIA_INDEX_NAME);
+                                     index.deleteObject(oldID);
+                               });
