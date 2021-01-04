@@ -9,50 +9,19 @@ import 'package:staff_portal/components/custom_outgoing_ticket_loading_container
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_outgoing_ticket_list_tile.dart';
 import 'package:staff_portal/config/constants.dart';
-import 'package:staff_portal/models/ticket_model.dart';
+import 'package:staff_portal/mixins/outgoing_ticket_scrollers.dart';
 import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_create.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
 
-class OutgoingTicket extends StatelessWidget {
+class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
   static const id = 'outgoing_ticket';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
-  final ScrollController _openedTicketsScrollController =
-      new ScrollController();
-  final ScrollController _closedTicketsScrollController =
-      new ScrollController();
 
   void dependencies(OutgoingTicketBloc bloc) async {
     await bloc.fetchDepartment();
     bloc.fetchOpenedTickets(perPage: 10);
-    bloc.fetchClosedTickets(perPage: 9);
-  }
-
-  openedTicketsScroller(context, OutgoingTicketBloc bloc) {
-    _openedTicketsScrollController.addListener(() {
-      double maxScroll =
-          _openedTicketsScrollController.position.maxScrollExtent;
-      double currentScroll = _openedTicketsScrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.25;
-      print(currentScroll);
-      if (maxScroll - currentScroll <= delta) {
-        bloc.fetchOpenedTickets(perPage: 2, more: true);
-      }
-    });
-  }
-
-  closedTicketsScroller(context, OutgoingTicketBloc bloc) {
-    _closedTicketsScrollController.addListener(() {
-      double maxScroll =
-          _closedTicketsScrollController.position.maxScrollExtent;
-      double currentScroll = _closedTicketsScrollController.position.pixels;
-      double delta = MediaQuery.of(context).size.height * 0.25;
-      print(currentScroll);
-      if (maxScroll - currentScroll <= delta) {
-        bloc.fetchClosedTickets(perPage: 2, more: true);
-      }
-    });
   }
 
   @override
@@ -127,35 +96,14 @@ class OutgoingTicket extends StatelessWidget {
               stream: bloc.department,
               initialData: null,
               builder: (context, departmentSnapshot) {
-                return StreamBuilder<List<TicketModel>>(
-                    stream: bloc.allTickets,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<TicketModel>> snapshot) {
-                      if (snapshot.hasError) {
-                        return Text('Something went wrong');
-                      }
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CustomOutgoingTicketLoadingContainer();
-                      }
-
-                      return TabBarView(
-                        children: [
-                          _buildOpenedTickets(bloc: bloc),
-                          _buildOpenedTickets(bloc: bloc),
-                          _buildClosedTickets(bloc: bloc),
-                          // _buildTickets(context, closedTickets),
-                        ],
-                      );
-                    });
+                return TabBarView(
+                  children: [
+                    _buildOpenedTickets(bloc: bloc),
+                    _buildPendingTickets(bloc: bloc),
+                    _buildClosedTickets(bloc: bloc),
+                  ],
+                );
               }),
-          // body: TabBarView(
-          //   children: [
-          //     // _buildAllTickets(context),
-          //     _buildTickets(context, bloc, 'opened'),
-          //     Text('Outgoing'),
-          //     Text('Closed')
-          //   ],
-          // ),
         ),
       ),
     );
@@ -176,7 +124,7 @@ class OutgoingTicket extends StatelessWidget {
               bloc.convertQueryDocumentSnapshotToTicketModel(snapshot.data);
 
           return ListView.builder(
-              controller: _openedTicketsScrollController,
+              controller: openedTicketsScrollController,
               itemCount: datas.length,
               itemBuilder: (BuildContext context, int index) {
                 return CustomOutgoingTicketListTile(
@@ -194,6 +142,7 @@ class OutgoingTicket extends StatelessWidget {
   }
 
   Widget _buildClosedTickets({OutgoingTicketBloc bloc}) {
+    bloc.fetchClosedTickets(perPage: 9);
     return StreamBuilder<List<QueryDocumentSnapshot>>(
         stream: bloc.closedTickets,
         builder: (context, snapshot) {
@@ -208,7 +157,40 @@ class OutgoingTicket extends StatelessWidget {
               bloc.convertQueryDocumentSnapshotToTicketModel(snapshot.data);
 
           return ListView.builder(
-              controller: _closedTicketsScrollController,
+              controller: closedTicketsScrollController,
+              itemCount: datas.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CustomOutgoingTicketListTile(
+                  title: datas[index].title != null
+                      ? datas[index].title
+                      : 'UnknowX',
+                  department: datas[index].toDepartment,
+                  datetime: datas[index].createdAt.toDate(),
+                  onPressed: () => Navigator.pushNamed(
+                      context, OutgoingTicketResponse.id,
+                      arguments: datas[index].id),
+                );
+              });
+        });
+  }
+
+  Widget _buildPendingTickets({OutgoingTicketBloc bloc}) {
+    bloc.fetchPendingTickets(perPage: 9);
+    return StreamBuilder<List<QueryDocumentSnapshot>>(
+        stream: bloc.pendingTickets,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CustomOutgoingTicketLoadingContainer();
+          }
+
+          final datas =
+              bloc.convertQueryDocumentSnapshotToTicketModel(snapshot.data);
+
+          return ListView.builder(
+              controller: pendingTicketsScrollController,
               itemCount: datas.length,
               itemBuilder: (BuildContext context, int index) {
                 return CustomOutgoingTicketListTile(
