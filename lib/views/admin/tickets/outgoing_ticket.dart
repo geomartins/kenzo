@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_bloc.dart';
@@ -17,9 +18,41 @@ import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
 class OutgoingTicket extends StatelessWidget {
   static const id = 'outgoing_ticket';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final ScrollController _openedTicketsScrollController =
+      new ScrollController();
+  final ScrollController _closedTicketsScrollController =
+      new ScrollController();
 
   void dependencies(OutgoingTicketBloc bloc) async {
     await bloc.fetchDepartment();
+    bloc.fetchOpenedTickets(perPage: 10);
+    bloc.fetchClosedTickets(perPage: 9);
+  }
+
+  openedTicketsScroller(context, OutgoingTicketBloc bloc) {
+    _openedTicketsScrollController.addListener(() {
+      double maxScroll =
+          _openedTicketsScrollController.position.maxScrollExtent;
+      double currentScroll = _openedTicketsScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
+      print(currentScroll);
+      if (maxScroll - currentScroll <= delta) {
+        bloc.fetchOpenedTickets(perPage: 2, more: true);
+      }
+    });
+  }
+
+  closedTicketsScroller(context, OutgoingTicketBloc bloc) {
+    _closedTicketsScrollController.addListener(() {
+      double maxScroll =
+          _closedTicketsScrollController.position.maxScrollExtent;
+      double currentScroll = _closedTicketsScrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.25;
+      print(currentScroll);
+      if (maxScroll - currentScroll <= delta) {
+        bloc.fetchClosedTickets(perPage: 2, more: true);
+      }
+    });
   }
 
   @override
@@ -27,6 +60,8 @@ class OutgoingTicket extends StatelessWidget {
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketProvider.of(context);
     dependencies(bloc);
+    openedTicketsScroller(context, bloc);
+    closedTicketsScroller(context, bloc);
 
     return CustomAuthBuilder(
       child: DefaultTabController(
@@ -34,7 +69,9 @@ class OutgoingTicket extends StatelessWidget {
         child: Scaffold(
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add),
-            onPressed: () {
+            onPressed: () async {
+              // await bloc.fetchClosedTickets(perPage: 2);
+              // print('done');
               Navigator.of(context).pushNamed(OutgoingTicketCreate.id);
             },
           ),
@@ -101,20 +138,12 @@ class OutgoingTicket extends StatelessWidget {
                         return CustomOutgoingTicketLoadingContainer();
                       }
 
-                      final List<TicketModel> openedTickets = snapshot.data
-                          .where((element) => element.status == 'opened')
-                          .toList();
-                      final List<TicketModel> closedTickets = snapshot.data
-                          .where((element) => element.status == 'closed')
-                          .toList();
-                      final List<TicketModel> pendingTickets = snapshot.data
-                          .where((element) => element.status == 'pending')
-                          .toList();
                       return TabBarView(
                         children: [
-                          _buildTickets(context, openedTickets),
-                          _buildTickets(context, pendingTickets),
-                          _buildTickets(context, closedTickets),
+                          _buildOpenedTickets(bloc: bloc),
+                          _buildOpenedTickets(bloc: bloc),
+                          _buildClosedTickets(bloc: bloc),
+                          // _buildTickets(context, closedTickets),
                         ],
                       );
                     });
@@ -132,18 +161,67 @@ class OutgoingTicket extends StatelessWidget {
     );
   }
 
-  Widget _buildTickets(BuildContext context, List<TicketModel> datas) {
-    return ListView.builder(
-        itemCount: datas.length,
-        itemBuilder: (BuildContext context, int index) {
-          return CustomOutgoingTicketListTile(
-            title: datas[index].title != null ? datas[index].title : 'UnknowX',
-            department: datas[index].toDepartment,
-            datetime: datas[index].createdAt.toDate(),
-            onPressed: () => Navigator.pushNamed(
-                context, OutgoingTicketResponse.id,
-                arguments: datas[index].id),
-          );
+  Widget _buildOpenedTickets({OutgoingTicketBloc bloc}) {
+    return StreamBuilder<List<QueryDocumentSnapshot>>(
+        stream: bloc.openedTickets,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CustomOutgoingTicketLoadingContainer();
+          }
+
+          final datas =
+              bloc.convertQueryDocumentSnapshotToTicketModel(snapshot.data);
+
+          return ListView.builder(
+              controller: _openedTicketsScrollController,
+              itemCount: datas.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CustomOutgoingTicketListTile(
+                  title: datas[index].title != null
+                      ? datas[index].title
+                      : 'UnknowX',
+                  department: datas[index].toDepartment,
+                  datetime: datas[index].createdAt.toDate(),
+                  onPressed: () => Navigator.pushNamed(
+                      context, OutgoingTicketResponse.id,
+                      arguments: datas[index].id),
+                );
+              });
+        });
+  }
+
+  Widget _buildClosedTickets({OutgoingTicketBloc bloc}) {
+    return StreamBuilder<List<QueryDocumentSnapshot>>(
+        stream: bloc.closedTickets,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CustomOutgoingTicketLoadingContainer();
+          }
+
+          final datas =
+              bloc.convertQueryDocumentSnapshotToTicketModel(snapshot.data);
+
+          return ListView.builder(
+              controller: _closedTicketsScrollController,
+              itemCount: datas.length,
+              itemBuilder: (BuildContext context, int index) {
+                return CustomOutgoingTicketListTile(
+                  title: datas[index].title != null
+                      ? datas[index].title
+                      : 'UnknowX',
+                  department: datas[index].toDepartment,
+                  datetime: datas[index].createdAt.toDate(),
+                  onPressed: () => Navigator.pushNamed(
+                      context, OutgoingTicketResponse.id,
+                      arguments: datas[index].id),
+                );
+              });
         });
   }
 }
