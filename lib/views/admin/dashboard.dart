@@ -34,8 +34,8 @@ class Dashboard extends StatelessWidget {
               height: MediaQuery.of(context).size.height - 100,
               child: ListView(
                 children: [
-                  _buildBackIcon(context),
-                  SizedBox(height: 10.0),
+                  //_buildBackIcon(context),
+                  SizedBox(height: 20.0),
                   _buildTitleWithCaption(context),
                   SizedBox(height: 40.0),
                   _buildCardList(context, bloc),
@@ -82,27 +82,15 @@ class Dashboard extends StatelessWidget {
                   textColor: Colors.white,
                   radius: 30.0,
                   title: 'Next',
-                  onPressed: () {
-                    Navigator.pushNamed(context, snapshot.data.selectedUrl);
-                  }),
+                  onPressed: !snapshot.hasData || snapshot.data == null
+                      ? null
+                      : () {
+                          Navigator.pushNamed(
+                              context, snapshot.data.selectedUrl);
+                        }),
             ],
           );
         });
-  }
-
-  Widget _buildBackIcon(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.teal,
-          ),
-        ),
-      ],
-    );
   }
 
   Widget _buildCardList(BuildContext context, TicketsBloc bloc) {

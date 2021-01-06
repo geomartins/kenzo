@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/forms/custom_outgoing_ticket_create_form.dart';
@@ -22,41 +23,43 @@ class OutgoingTicketCreate extends StatelessWidget with GetSnackbar {
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketCreateProvider.of(context);
 
-    return Scaffold(
-      key: _drawerKey,
-      bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-      drawer: CustomDrawer(),
-      appBar: AppBar(
-        title: Text(
-          'Create Ticket',
-          style: TextStyle(color: Colors.black87),
+    return CustomAuthBuilder(
+      child: Scaffold(
+        key: _drawerKey,
+        bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
+        drawer: CustomDrawer(),
+        appBar: AppBar(
+          title: Text(
+            'Create Ticket',
+            style: TextStyle(color: Colors.black87),
+          ),
+          actions: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () => bloc.clear(),
+                  child: Text('Clear', style: TextStyle(color: Colors.black87)),
+                ),
+                SizedBox(width: 20.0),
+              ],
+            )
+          ],
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: kPrimaryColor),
+            onPressed: () => Navigator.pop(context),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          shadowColor: kTertiaryColor.shade300,
+          elevation: 1.0,
         ),
-        actions: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () => bloc.clear(),
-                child: Text('Clear', style: TextStyle(color: Colors.black87)),
-              ),
-              SizedBox(width: 20.0),
-            ],
-          )
-        ],
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: kPrimaryColor),
-          onPressed: () => Navigator.pop(context),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        shadowColor: kTertiaryColor.shade300,
-        elevation: 1.0,
-      ),
-      body: SafeArea(
-        maintainBottomViewPadding: true,
-        minimum: EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: CustomOutgoingTicketCreateForm(),
+        body: SafeArea(
+          maintainBottomViewPadding: true,
+          minimum: EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: CustomOutgoingTicketCreateForm(),
+          ),
         ),
       ),
     );

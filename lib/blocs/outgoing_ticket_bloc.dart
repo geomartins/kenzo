@@ -2,14 +2,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/outgoing_ticket_paginators.dart';
-import 'package:staff_portal/mixins/validators.dart';
 import 'package:staff_portal/models/profile_model.dart';
 import 'package:staff_portal/services/firestore_service.dart';
 import '../models/ticket_model.dart';
 import 'package:staff_portal/services/algolia_service.dart';
 
-class OutgoingTicketBloc extends Object
-    with Validators, OutgoingTicketPaginators {
+class OutgoingTicketBloc extends Object with OutgoingTicketPaginators {
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
   BehaviorSubject _result = new BehaviorSubject<List<TicketModel>>();
   BehaviorSubject _search = new BehaviorSubject<List<TicketModel>>();

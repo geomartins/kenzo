@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
@@ -31,12 +30,28 @@ class CustomOutgoingTicketResponseMetaData extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(FontAwesome.user_o, color: kPrimaryColor, size: 20.0),
+                    Icon(Icons.accessibility_new_outlined,
+                        color: kPrimaryColor, size: 20.0),
                     SizedBox(width: 3.0),
                     Text(
                       data.user['firstname'] != null
                           ? data.user['firstname'] + ' ' + data.user['lastname']
                           : data.user['department'],
+                      style: TextStyle(fontSize: 14.0),
+                    ),
+                  ],
+                ),
+                SizedBox(width: 20.0),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.account_balance_outlined,
+                        color: kPrimaryColor, size: 20.0),
+                    SizedBox(width: 3.0),
+                    Text(
+                      data.user['department'] != null
+                          ? data.user['department']
+                          : 'Unknown department',
                       style: TextStyle(fontSize: 14.0),
                     ),
                   ],

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/validators.dart';
 import 'package:staff_portal/models/ticket_model.dart';
@@ -13,8 +14,9 @@ class OutgoingTicketResponseBloc extends Object with Validators {
   BehaviorSubject _reply = new BehaviorSubject<String>();
   BehaviorSubject _images = new BehaviorSubject<List<File>>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
-
   BehaviorSubject _status = new BehaviorSubject<String>();
+  BehaviorSubject _editingControllers =
+      new BehaviorSubject<List<TextEditingController>>();
 
   void ticketIDSink(String value) {
     _ticketID.add(value);
@@ -35,6 +37,10 @@ class OutgoingTicketResponseBloc extends Object with Validators {
   void statusSink(String value) {
     _status.add(value);
     updateStatus();
+  }
+
+  void editingControllersSink(List<TextEditingController> value) {
+    _editingControllers.sink.add(value);
   }
 
   //STREAMS
@@ -70,15 +76,13 @@ class OutgoingTicketResponseBloc extends Object with Validators {
 
   String get validReply => _reply.value;
 
-  Stream<bool> get submitValid =>
-      Rx.combineLatest2(reply, reply, (e, p) => e.length > 1 ? true : false);
-
   Future<void> submit() async {
     try {
       List<String> imageURLs = await StorageService()
           .uploadFiles(images: validImages(), path: 'uploads/tickets/images');
       await FirestoreService().createOutgoingTicketResponse(
           reply: _reply.value, ticketID: _ticketID.value, imageURLs: imageURLs);
+      clear();
     } catch (e) {
       rethrow;
     }
@@ -93,6 +97,11 @@ class OutgoingTicketResponseBloc extends Object with Validators {
     }
   }
 
+  void clear() {
+    imagesSink(null);
+    _editingControllers.value[0].text = '';
+  }
+
   void dispose() {
     _ticketID.close();
     _reply.close();
@@ -100,5 +109,6 @@ class OutgoingTicketResponseBloc extends Object with Validators {
     _isLoading.close();
 
     _status.close();
+    _editingControllers.close();
   }
 }

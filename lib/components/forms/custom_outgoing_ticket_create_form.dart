@@ -6,15 +6,22 @@ import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/outgoing_ticket_create_provider.dart';
-import 'package:staff_portal/utilities/camera.dart';
+import 'package:staff_portal/utilities/device_file.dart';
 
 import '../custom_offstage_progress_indicator.dart';
 
 class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
+  final TextEditingController _titleTextEditingController =
+      new TextEditingController();
+  final TextEditingController _descriptionTextEditingController =
+      new TextEditingController();
   @override
   Widget build(BuildContext context) {
     final bloc = OutgoingTicketCreateProvider.of(context);
+    bloc.fetchFromDepartment();
     bloc.fetchDepartmentList();
+    bloc.editingControllersSink(
+        [_titleTextEditingController, _descriptionTextEditingController]);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -24,7 +31,7 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
         SizedBox(height: 30.0),
         _buildTitleAndMessageField(context, bloc),
         SizedBox(height: 10.0),
-        Camera().views(bloc),
+        DeviceFile().views(bloc),
         SizedBox(height: 10.0),
         _buildButtonField(context, bloc),
       ],
@@ -43,12 +50,12 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
                 builder: (context, isLoadingSnapshot) {
                   return IconButton(
                       color: kTertiaryColor,
-                      icon: Icon(FontAwesome.camera),
+                      icon: Icon(FontAwesome.folder_open_o),
                       onPressed: isLoadingSnapshot.data == true
                           ? null
                           : () async {
-                              await Camera()
-                                  .openCameraDevice(bloc, context, null);
+                              await DeviceFile().openFiles(
+                                  bloc, context, ['jpg', 'png', 'pdf'], null);
                             });
                 })),
         Expanded(
@@ -78,7 +85,7 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
                                     buildCustomSnackbar(
                                         titleText: 'Successful!!!',
                                         messageText:
-                                        'Ticket Created Successfully',
+                                            'Ticket Created Successfully',
                                         icon: Icons.info,
                                         iconColor: kPrimaryColor);
                                     Navigator.pop(context);
@@ -183,7 +190,9 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
                   initialData: false,
                   builder: (context, isLoadingSnapshot) {
                     return TextField(
-
+                      controller: _titleTextEditingController,
+                      onEditingComplete: () =>
+                          FocusScope.of(context).nextFocus(),
                       enabled: !isLoadingSnapshot.data,
                       onChanged: (String newValue) => bloc.titleSink(newValue),
                       decoration: InputDecoration(
@@ -210,9 +219,10 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
                   initialData: false,
                   builder: (context, isLoadingSnapshot) {
                     return TextField(
+                      controller: _descriptionTextEditingController,
+                      keyboardType: TextInputType.multiline,
                       enabled: !isLoadingSnapshot.data,
-                      minLines: 3,
-                      maxLines: 5,
+                      maxLines: null,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: kTertiaryColor.shade200,

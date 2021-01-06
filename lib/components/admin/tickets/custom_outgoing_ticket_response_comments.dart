@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_response_model.dart';
+import 'package:staff_portal/utilities/dates.dart';
 
 import '../../custom_offstage_progress_indicator.dart';
 import 'custom_outgoing_ticket_response_comment_media_frame.dart';
@@ -34,7 +35,8 @@ class CustomOutgoingTicketResponseComments extends StatelessWidget {
                   itemCount: ticketResponseDataSnapshot.data.length,
                   itemBuilder: (context, int index) {
                     final data = ticketResponseDataSnapshot.data[index];
-                    final fullname = data.user['firstname'];
+                    final fullname =
+                        data.user['firstname'] + ' ' + data.user['lastname'];
                     final reply = data.reply;
                     final createdAt = data.createdAt;
 
@@ -80,7 +82,9 @@ class CustomOutgoingTicketResponseComments extends StatelessWidget {
                               children: [
                                 SizedBox(height: 5.0),
                                 Text(
-                                  createdAt.toDate().toString(),
+                                  Dates()
+                                      .timeInSeconds(createdAt.toDate())
+                                      .toString(),
                                   textAlign: TextAlign.right,
                                   style: Theme.of(context)
                                       .textTheme
