@@ -13,22 +13,20 @@ import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/profile_provider.dart';
 import 'package:staff_portal/providers/register_provider.dart';
 import 'package:staff_portal/providers/tickets_provider.dart';
-import 'package:staff_portal/views/admin/chats.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
-import 'package:staff_portal/views/admin/events.dart';
 import 'package:staff_portal/views/admin/profile.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket_response.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_create.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
-import 'package:staff_portal/views/admin/tickets/tickets.dart';
 import 'package:staff_portal/views/login.dart';
 import 'package:staff_portal/views/page_not_found.dart';
 import 'package:staff_portal/views/password_reset.dart';
 import 'package:staff_portal/views/register.dart';
 import 'package:staff_portal/views/splash.dart';
 import 'package:staff_portal/views/welcome.dart';
+import './views/admin/opinion.dart';
 import 'package:get/get.dart';
 import './views/home.dart';
 
@@ -87,9 +85,7 @@ class _MyAppState extends State<MyApp> {
                                     PageNotFound(),
                                 Dashboard.id: (BuildContext ctx) => Dashboard(),
                                 Profile.id: (BuildContext ctx) => Profile(),
-                                Events.id: (BuildContext ctx) => Events(),
-                                Chats.id: (BuildContext ctx) => Chats(),
-                                Tickets.id: (BuildContext ctx) => Tickets(),
+                                Opinion.id: (BuildContext ctx) => Opinion(),
                                 IncomingTicket.id: (BuildContext ctx) =>
                                     IncomingTicket(),
                                 OutgoingTicket.id: (BuildContext ctx) =>

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/forms/custom_outgoing_ticket_create_form.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
@@ -26,8 +25,7 @@ class OutgoingTicketCreate extends StatelessWidget with GetSnackbar {
     return CustomAuthBuilder(
       child: Scaffold(
         key: _drawerKey,
-        bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-        drawer: CustomDrawer(),
+        bottomNavigationBar: CustomBottomNavigationBar(),
         appBar: AppBar(
           title: Text(
             'Create Ticket',

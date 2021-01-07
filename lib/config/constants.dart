@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const kAppName = 'Staff Portal';
+const kAppName = 'Kenzo';
 const kCompanyName = 'Agro Park';
 const kPrimaryColor = Colors.teal;
 const kTertiaryColor = Colors.grey;

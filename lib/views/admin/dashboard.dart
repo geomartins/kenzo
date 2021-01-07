@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/blocs/tickets_bloc.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_tickets_card.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/tickets_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/tickets_provider.dart';
+import 'package:staff_portal/views/admin/opinion.dart';
 import 'package:staff_portal/views/admin/profile.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket.dart';
-import 'package:staff_portal/views/page_not_found.dart';
 
 class Dashboard extends StatelessWidget {
   static const id = 'dashboard';
@@ -26,7 +25,6 @@ class Dashboard extends StatelessWidget {
     return CustomAuthBuilder(
         child: Scaffold(
       key: _drawerKey,
-      drawer: CustomDrawer(),
       body: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: SingleChildScrollView(
@@ -133,14 +131,14 @@ class Dashboard extends StatelessWidget {
                     bloc.selectedSink(TicketsModel('profile', Profile.id)),
               ),
               CustomTicketsCard(
-                title: 'Settings',
-                icon: FontAwesome.cogs,
-                iconColor: snapshot.data.selectedId == 'settings'
+                title: 'Feedback',
+                icon: FontAwesome.feed,
+                iconColor: snapshot.data.selectedId == 'feedback'
                     ? kPrimaryColor
                     : kTertiaryColor,
-                offStage: snapshot.data.selectedId == 'settings' ? false : true,
-                onPressed: () => bloc
-                    .selectedSink(TicketsModel('settings', PageNotFound.id)),
+                offStage: snapshot.data.selectedId == 'feedback' ? false : true,
+                onPressed: () =>
+                    bloc.selectedSink(TicketsModel('feedback', Opinion.id)),
               ),
             ],
           );

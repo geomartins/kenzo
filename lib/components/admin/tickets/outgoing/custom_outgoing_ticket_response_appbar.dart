@@ -27,37 +27,6 @@ class CustomOutgoingTicketResponseAppbar extends AppBar {
                 stream: bloc.isLoading,
                 initialData: false,
                 builder: (context, isLoadingSnapshot) {
-                  // return DropdownButton<String>(
-                  //   underline: Container(),
-                  //   icon: Icon(Icons.more_vert),
-                  //   items: [
-                  //     DropdownMenuItem(
-                  //       child: Column(
-                  //         children: [
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //             children: [
-                  //               Text('Sender:'),
-                  //               Text('${data.fromDepartment}')
-                  //             ],
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       value: '',
-                  //     ),
-                  //     // DropdownMenuItem(
-                  //     //   child: Row(
-                  //     //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //     //     children: [
-                  //     //       Text('Reciever:'),
-                  //     //       Text('${data.toDepartment}')
-                  //     //     ],
-                  //     //   ),
-                  //     //   value: '',
-                  //     // ),
-                  //   ],
-                  //   onChanged: (_) {},
-                  // );
                   return Container(
                     width: 30.0,
                     height: 30.0,

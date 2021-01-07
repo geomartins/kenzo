@@ -8,7 +8,6 @@ import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_t
 
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/outgoing_ticket_scrollers.dart';
 import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
@@ -96,8 +95,7 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
             ),
           ),
           key: _drawerKey,
-          bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-          drawer: CustomDrawer(),
+          bottomNavigationBar: CustomBottomNavigationBar(),
           body: StreamBuilder<String>(
               stream: bloc.department,
               initialData: null,

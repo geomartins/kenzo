@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:staff_portal/blocs/tickets_bloc.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_tickets_card.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/tickets_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/tickets_provider.dart';
-
 import 'incoming_ticket.dart';
 import 'outgoing_ticket.dart';
 
@@ -25,8 +23,7 @@ class Tickets extends StatelessWidget {
     return CustomAuthBuilder(
         child: Scaffold(
       key: _drawerKey,
-      bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-      drawer: CustomDrawer(),
+      bottomNavigationBar: CustomBottomNavigationBar(),
       body: SafeArea(
         minimum: EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: SingleChildScrollView(

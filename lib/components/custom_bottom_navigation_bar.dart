@@ -4,22 +4,14 @@ import 'package:staff_portal/blocs/preference_bloc.dart';
 import 'package:staff_portal/components/custom_icon_button.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/views/admin/dashboard.dart';
+import 'package:staff_portal/views/admin/opinion.dart';
 import 'package:staff_portal/views/admin/profile.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar({
-    Key key,
-    @required GlobalKey<ScaffoldState> drawerKey,
-  })  : _drawerKey = drawerKey,
-        super(key: key);
-
-  final GlobalKey<ScaffoldState> _drawerKey;
-
   @override
   Widget build(BuildContext context) {
-    //String routeID = ModalRoute.of(context).settings.name;
     final bloc = PreferenceProvider.of(context);
     return BottomAppBar(
       child: Row(
@@ -103,11 +95,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
         stream: bloc.isActive,
         builder: (context, snapshot) {
           return CustomIconButton(
-              icon: Icons.menu,
-              color: snapshot.data == 'module' ? Colors.teal : Colors.grey,
-              title: 'Settings',
+              icon: FontAwesome.feed,
+              color: snapshot.data == 'opinion' ? Colors.teal : Colors.grey,
+              title: 'Feedback',
               onPressed: () {
-                _drawerKey.currentState.openDrawer();
+                Navigator.pushNamed(context, Opinion.id);
               });
         });
   }

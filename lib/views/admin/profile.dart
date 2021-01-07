@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:staff_portal/blocs/profile_bloc.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/components/custom_outline_button.dart';
@@ -57,8 +56,7 @@ class Profile extends StatelessWidget with GetSnackbar {
           elevation: 0.0,
           centerTitle: true,
         ),
-        bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-        drawer: CustomDrawer(),
+        bottomNavigationBar: CustomBottomNavigationBar(),
         body: SafeArea(
           minimum: EdgeInsets.all(10.0),
           left: true,

@@ -7,7 +7,6 @@ import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_t
 import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_search.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/incoming_ticket_scrollers.dart';
 import 'package:staff_portal/providers/incoming_ticket_provider.dart';
@@ -86,8 +85,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
             ),
           ),
           key: _drawerKey,
-          bottomNavigationBar: CustomBottomNavigationBar(drawerKey: _drawerKey),
-          drawer: CustomDrawer(),
+          bottomNavigationBar: CustomBottomNavigationBar(),
           body: StreamBuilder<String>(
               stream: bloc.department,
               initialData: null,

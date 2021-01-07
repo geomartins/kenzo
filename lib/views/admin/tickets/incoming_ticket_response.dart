@@ -6,7 +6,6 @@ import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_t
 import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_response_meta_data.dart';
 import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_response_status_bar.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
@@ -51,9 +50,7 @@ class IncomingTicketResponse extends StatelessWidget with GetSnackbar {
                   }
                   return Scaffold(
                     key: _drawerKey,
-                    bottomNavigationBar:
-                        CustomBottomNavigationBar(drawerKey: _drawerKey),
-                    drawer: CustomDrawer(),
+                    bottomNavigationBar: CustomBottomNavigationBar(),
                     appBar: CustomIncomingTicketResponseAppbar(
                       bloc: bloc,
                       data: ticketDataSnapshot.data,

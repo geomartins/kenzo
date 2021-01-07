@@ -2,8 +2,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/incoming_ticket_paginators.dart';
-import 'package:staff_portal/models/profile_model.dart';
-import 'package:staff_portal/services/firestore_service.dart';
 import '../models/ticket_model.dart';
 import 'package:staff_portal/services/algolia_service.dart';
 
