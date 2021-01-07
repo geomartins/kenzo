@@ -25,7 +25,13 @@ class Register extends StatelessWidget {
 
   Widget buildDescriptionLayout(BuildContext context) {
     return Container(
-      color: kTertiaryColor,
+      decoration: BoxDecoration(
+        color: kTertiaryColor,
+        image: new DecorationImage(
+          image: new AssetImage('assets/images/bg.jpeg'),
+          fit: BoxFit.cover,
+        ),
+      ),
       padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +44,7 @@ class Register extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 100.0,
+            height: 70.0,
           ),
           Text('Create',
               style: TextStyle(

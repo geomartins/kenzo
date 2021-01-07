@@ -15,7 +15,7 @@ class CustomFlatButton extends FlatButton {
       @required this.onPressed,
       this.radius})
       : super(
-          disabledColor: kTertiaryColor,
+          disabledColor: kPrimaryColor.shade300,
           color: color,
           child: Text(
             title,
