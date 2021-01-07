@@ -35,4 +35,28 @@ class AlgoliaService {
     print('Inside algolia Service $result');
     return result;
   }
+
+  Future<List<TicketModel>> incomingTicketSearch(
+      {String input, String toDepartment}) async {
+    List<TicketModel> result = [];
+    AlgoliaQuery query = algolia.instance.index('tickets').search(input);
+    //query = query.setFacetFilter('from_department:ict');
+    AlgoliaQuerySnapshot algoliaQuerySnapshot = await query.getObjects();
+    print(algoliaQuerySnapshot.hits);
+    List<AlgoliaObjectSnapshot> algoliaObjectSnapshot =
+        algoliaQuerySnapshot.hits;
+    for (AlgoliaObjectSnapshot snapshot in algoliaObjectSnapshot) {
+      Map<String, dynamic> data = snapshot.data;
+      data['id'] = snapshot.objectID;
+      data['created_at'] = Timestamp.now();
+
+      TicketModel ticketModel = TicketModel.fromMap(data);
+      if (ticketModel.toDepartment == toDepartment) {
+        result.add(ticketModel);
+      }
+    }
+
+    print('Inside algolia Service $result');
+    return result;
+  }
 }

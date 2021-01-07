@@ -171,6 +171,44 @@ class FirestoreService {
     }
   }
 
+  Future<void> createIncomingTicketResponse(
+      {String ticketID, String reply, List<String> imageURLs}) async {
+    try {
+      DocumentReference userReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.currentUser.uid);
+
+      DocumentReference ticketResponseReference = FirebaseFirestore.instance
+          .collection('tickets')
+          .doc(ticketID)
+          .collection('responses')
+          .doc();
+
+      firestore.runTransaction((transaction) async {
+        // Get the document
+        DocumentSnapshot userSnapshot = await transaction.get(userReference);
+        if (!userSnapshot.exists) {
+          throw Exception("User does not exist!");
+        }
+        ProfileModel profileModel =
+            ProfileModel.fromFirestore(userSnapshot.data());
+
+        //
+        transaction.set(ticketResponseReference, {
+          "reply": reply,
+          "user": profileModel.toMap(),
+          "images": imageURLs,
+          "created_at": FieldValue.serverTimestamp(),
+        });
+      });
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
+
   Future<void> updateTicketStatus({String ticketID, String status}) async {
     try {
       firestore.collection('tickets').doc(ticketID).update({"status": status});

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_appbar.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_bottom_sheet.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_meta_data.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_status_bar.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
-
 import 'package:staff_portal/providers/outgoing_ticket_response_provider.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_response_appbar.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_response_comments.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_response_media_frame.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_response_status_bar.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_response_meta_data.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_response_bottom_sheet.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_comments.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_media_frame.dart';
+
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/utilities/device_file.dart';
 import '../../../components/builders/custom_auth_builder.dart';

@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:staff_portal/blocs/outgoing_ticket_bloc.dart';
-import 'package:staff_portal/components/admin/tickets/custom_outgoing_ticket_search.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_list_tile.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_loading_container.dart';
+import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_search.dart';
+
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
-import 'package:staff_portal/components/custom_outgoing_ticket_loading_container.dart';
 import 'package:staff_portal/components/custom_drawer.dart';
-import 'package:staff_portal/components/custom_outgoing_ticket_list_tile.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/outgoing_ticket_scrollers.dart';
 import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
@@ -19,18 +20,23 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
   static const id = 'outgoing_ticket';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  void dependencies(OutgoingTicketBloc bloc) async {
+  void dependencies(context, OutgoingTicketBloc bloc) async {
     await bloc.fetchDepartment();
-    bloc.fetchOpenedTickets(perPage: 10);
+    await bloc.fetchOpenedTickets(perPage: 10);
+  }
+
+  void scrollers(context, OutgoingTicketBloc bloc) {
+    openedTicketsScroller(context, bloc);
+    pendingTicketsScroller(context, bloc);
+    closedTicketsScroller(context, bloc);
   }
 
   @override
   Widget build(BuildContext context) {
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketProvider.of(context);
-    dependencies(bloc);
-    openedTicketsScroller(context, bloc);
-    closedTicketsScroller(context, bloc);
+    dependencies(context, bloc);
+    scrollers(context, bloc);
 
     return CustomAuthBuilder(
       child: DefaultTabController(
@@ -96,6 +102,13 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
               stream: bloc.department,
               initialData: null,
               builder: (context, departmentSnapshot) {
+                if (departmentSnapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+                if (departmentSnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return CustomOutgoingTicketLoadingContainer();
+                }
                 return TabBarView(
                   children: [
                     _buildOpenedTickets(bloc: bloc),

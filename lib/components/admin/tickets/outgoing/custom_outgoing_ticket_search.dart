@@ -3,7 +3,7 @@ import 'package:staff_portal/blocs/outgoing_ticket_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
-import '../../custom_outgoing_ticket_list_tile.dart';
+import 'custom_outgoing_ticket_list_tile.dart';
 
 class CustomOutgoingTicketSearch extends SearchDelegate<TicketModel> {
   final OutgoingTicketBloc bloc;
