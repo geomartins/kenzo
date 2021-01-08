@@ -10,38 +10,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:staff_portal/services/storage_service.dart';
 
 class OutgoingTicketResponseBloc extends Object with Validators {
+  //SUBJECT
   BehaviorSubject _ticketID = new BehaviorSubject<String>();
   BehaviorSubject _reply = new BehaviorSubject<String>();
   BehaviorSubject _images = new BehaviorSubject<List<File>>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
   BehaviorSubject _status = new BehaviorSubject<String>();
+  BehaviorSubject _notifier = new BehaviorSubject<String>();
+  BehaviorSubject _notifierViewId = new BehaviorSubject<String>();
   BehaviorSubject _editingControllers =
       new BehaviorSubject<List<TextEditingController>>();
+  //=SUBJECT
 
-  void ticketIDSink(String value) {
-    _ticketID.add(value);
-  }
-
-  void replySink(String value) {
-    _reply.add(value);
-  }
-
-  void imagesSink(List<File> value) {
-    _images.sink.add(value);
-  }
-
-  void loadingSink(bool value) {
-    _isLoading.sink.add(value);
-  }
-
+  //SINK
+  void ticketIDSink(String value) => _ticketID.add(value);
+  void replySink(String value) => _reply.add(value);
+  void imagesSink(List<File> value) => _images.sink.add(value);
+  void loadingSink(bool value) => _isLoading.sink.add(value);
   void statusSink(String value) {
-    _status.add(value);
+    _status.sink.add(value);
     updateStatus();
   }
 
-  void editingControllersSink(List<TextEditingController> value) {
-    _editingControllers.sink.add(value);
-  }
+  void editingControllersSink(List<TextEditingController> value) =>
+      _editingControllers.sink.add(value);
+  void notifierSink(String value) => _notifier.sink.add(value);
+  void notifierViewIdSink(String value) => _notifierViewId.sink.add(value);
+  //=SINK
 
   //STREAMS
   Stream get isLoading => _isLoading.stream;
@@ -50,10 +45,15 @@ class OutgoingTicketResponseBloc extends Object with Validators {
   Stream get reply => _reply.stream;
 
   Stream<TicketModel> get ticketData => FirebaseFirestore.instance
-      .collection('tickets')
-      .doc(_ticketID.value)
-      .snapshots()
-      .map((data) => TicketModel.fromMap(data.data()));
+          .collection('tickets')
+          .doc(_ticketID.value)
+          .snapshots()
+          .map((data) {
+        final result = TicketModel.fromMap(data.data());
+        notifierSink(result.toDepartment + '_ticket_response');
+        notifierViewIdSink('incoming_ticket_response');
+        return result;
+      });
 
   Stream<List<TicketResponseModel>> get ticketResponseData =>
       FirebaseFirestore.instance
@@ -70,6 +70,8 @@ class OutgoingTicketResponseBloc extends Object with Validators {
         return result;
       });
 
+  //=STREAM
+
   List<File> validImages() {
     return _images.value ?? [];
   }
@@ -81,7 +83,12 @@ class OutgoingTicketResponseBloc extends Object with Validators {
       List<String> imageURLs = await StorageService()
           .uploadFiles(images: validImages(), path: 'uploads/tickets/images');
       await FirestoreService().createOutgoingTicketResponse(
-          reply: _reply.value, ticketID: _ticketID.value, imageURLs: imageURLs);
+        reply: _reply.value,
+        ticketID: _ticketID.value,
+        imageURLs: imageURLs,
+        notifier: _notifier.value,
+        notifierViewId: _notifierViewId.value,
+      );
       clear();
     } catch (e) {
       rethrow;
@@ -107,6 +114,8 @@ class OutgoingTicketResponseBloc extends Object with Validators {
     _reply.close();
     _images.close();
     _isLoading.close();
+    _notifier.close();
+    _notifierViewId.close();
 
     _status.close();
     _editingControllers.close();

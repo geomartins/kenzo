@@ -12,6 +12,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/outgoing_ticket_scrollers.dart';
 import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_create.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
 
@@ -32,6 +33,7 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketProvider.of(context);
     dependencies(context, bloc);

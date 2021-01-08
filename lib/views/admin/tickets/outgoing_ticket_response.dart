@@ -12,6 +12,7 @@ import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_t
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_media_frame.dart';
 
 import 'package:staff_portal/mixins/get_snackbar.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/utilities/device_file.dart';
 import '../../../components/builders/custom_auth_builder.dart';
 
@@ -22,6 +23,7 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketResponseProvider.of(context);
     bloc.ticketIDSink(ModalRoute.of(context).settings.arguments);
@@ -40,7 +42,8 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
 
             return StreamBuilder<TicketModel>(
                 stream: bloc.ticketData,
-                builder: (context, ticketDataSnapshot) {
+                builder:
+                    (context, AsyncSnapshot<TicketModel> ticketDataSnapshot) {
                   if (ticketDataSnapshot.hasError) {
                     return Text('Something went wrong');
                   }
@@ -49,6 +52,9 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
                     return Scaffold(
                         body: CustomOffstageProgressIndicator(status: false));
                   }
+
+                  //ticketDataSnapshot.data.fromDepartment
+
                   return Scaffold(
                     key: _drawerKey,
                     bottomNavigationBar: CustomBottomNavigationBar(),

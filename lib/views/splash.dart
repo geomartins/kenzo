@@ -16,7 +16,7 @@ class _SplashState extends State<Splash> {
       child: new SplashScreen(
         seconds: 1,
         navigateAfterSeconds: Welcome(),
-        imageBackground: AssetImage('assets/images/auth_bg.png'),
+        imageBackground: AssetImage('assets/images/welcome.jpeg'),
         backgroundColor: Colors.white,
         loaderColor: Colors.white,
       ),

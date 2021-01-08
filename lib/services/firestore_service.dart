@@ -108,6 +108,8 @@ class FirestoreService {
           "status": 'opened',
           "images": imageURLs,
           "created_at": FieldValue.serverTimestamp(),
+          "notifier": toDepartment + '_ticket',
+          "notifier_view_id": 'incoming_ticket',
         });
 
         // ticketReference.collection('medias').doc()
@@ -134,7 +136,11 @@ class FirestoreService {
   // }
 
   Future<void> createOutgoingTicketResponse(
-      {String ticketID, String reply, List<String> imageURLs}) async {
+      {String ticketID,
+      String reply,
+      List<String> imageURLs,
+      String notifier,
+      String notifierViewId}) async {
     try {
       DocumentReference userReference = FirebaseFirestore.instance
           .collection('users')
@@ -161,6 +167,8 @@ class FirestoreService {
           "user": profileModel.toMap(),
           "images": imageURLs,
           "created_at": FieldValue.serverTimestamp(),
+          "notifier": notifier,
+          "notifier_view_id": notifierViewId,
         });
       });
     } catch (e) {

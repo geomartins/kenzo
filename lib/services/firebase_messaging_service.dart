@@ -32,7 +32,9 @@ class FirebaseMessagingService {
         if (msg['data'] != null) {
           final data = FcmConfigureModel.fromMap(msg['data']);
           if (data.viewId != null) {
+            print('View IDD : ${data.viewId}');
             SchedulerBinding.instance.addPostFrameCallback((_) {
+              print('View IDDD : ${data.viewId}');
               Navigator.pushNamed(context, data.viewId,
                   arguments: data.arguments);
             });

@@ -8,6 +8,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/tickets_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/tickets_provider.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/views/admin/opinion.dart';
 import 'package:staff_portal/views/admin/profile.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket.dart';
@@ -17,8 +18,14 @@ class Dashboard extends StatelessWidget {
   static const id = 'dashboard';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
+  Dashboard() {
+    FirebaseMessagingService().topicSubscription(topic: 'ticket');
+    FirebaseMessagingService().topicSubscription(topic: 'ticket_response');
+  }
+
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = TicketsProvider.of(context);
 

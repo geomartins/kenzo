@@ -12,10 +12,6 @@ class OutgoingTicketCreate extends StatelessWidget with GetSnackbar {
   static const id = 'outgoing_ticket_create';
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
 
-  OutgoingTicketCreate() {
-    FirebaseMessagingService().topicSubscription(topic: 'ticket');
-  }
-
   @override
   Widget build(BuildContext context) {
     FirebaseMessagingService().configure(context);

@@ -11,6 +11,7 @@ import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/incoming_ticket_response_provider.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/utilities/device_file.dart';
 import '../../../components/builders/custom_auth_builder.dart';
 
@@ -21,6 +22,7 @@ class IncomingTicketResponse extends StatelessWidget with GetSnackbar {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = IncomingTicketResponseProvider.of(context);
     bloc.ticketIDSink(ModalRoute.of(context).settings.arguments);

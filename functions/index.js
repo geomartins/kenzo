@@ -29,39 +29,53 @@ admin.initializeApp(functions.config().firebase);
 //   });
 
 
-   exports.outgoingTicketCreate = functions.firestore
-     .document('tickets/{docId}')
-     .onCreate((snap, context) => {
-           console.log(snap.data());
-           //ict_ticket
-           //clientservices_ticket
-           //ict_response_ticket
-           const data = snap.data();
-           let title = data.title;
-           let description = data.description;
-           let department = data.to_department;
-           let subscriptionTopic = department+'_ticket';
 
-           admin.messaging().sendToTopic(subscriptionTopic, { notification: {
-               title: title,
-               body: description,
-               clickAction: 'FLUTTER_NOTIFICATION_CLICK'
-           }})
-           return;
+      exports.createTicketResponse = functions.firestore
+           .document('tickets/{docId}/responses/{repId}')
+           .onCreate((snap, context) => {
+            const data = snap.data();
+
+           //Push Notification
+             admin.messaging().sendToTopic(data.notifier, {
+                 notification: {
+                     title: data.user.firstname+' '+data.user.lastname+' @'+data.user.department+'  #'+snap.id,
+                     body: 'New Response!!! '+data.reply,
+                     clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+                 },
+                 data: {
+                    view_id: data.notifier_view_id,
+                    arguments: context.params.repId,
+                 }
+             })
       });
 
 
       exports.createTicket = functions.firestore
           .document('tickets/{docId}')
           .onCreate((snap, context) => {
+
                 const newValue = snap.data();
+
+                //Message to Algolia
                 newValue.objectID = snap.id;
-
                 var client = algoliasearch(ALGOLIA_APP_ID,ALGOLIA_ADMIN_KEY);
-
                 var index = client.initIndex(ALGOLIA_INDEX_NAME);
                 index.saveObject(newValue);
                 console.log('finished');
+
+
+                //Push Notification
+                admin.messaging().sendToTopic(newValue.notifier, {
+                    notification: {
+                       title: newValue.user.firstname+' '+newValue.user.lastname+' @'+newValue.user.department+'  #'+snap.id,
+                       body: 'New Ticket!!! '+newValue.title,
+                       clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+                    },
+                    data: {
+                         view_id: newValue.notifier_view_id,
+                         arguments: context.params.docId,
+                    }
+               });
 
           });
 
@@ -69,11 +83,31 @@ admin.initializeApp(functions.config().firebase);
            exports.updateTicket = functions.firestore
                     .document('tickets/{docId}')
                     .onUpdate((snap, context) => {
+
+                          const beforeUpdate = snap.before.data();
                           const afterUpdate = snap.after.data();
                           afterUpdate.objectID = snap.after.id;
                           var client = algoliasearch(ALGOLIA_APP_ID,ALGOLIA_ADMIN_KEY);
                           var index = client.initIndex(ALGOLIA_INDEX_NAME);
                           index.saveObject(afterUpdate);
+
+
+                           //Push Notification
+//
+                           if(afterUpdate.status !== beforeUpdate.status){
+                                 admin.messaging().sendToTopic(afterUpdate.from_department+'_ticket', {
+                                     notification: {
+                                         title: '@'+afterUpdate.to_department+'  #'+context.params.docId,
+                                         body: 'Status Update!!! Ticket marked as '+afterUpdate.status,
+                                         clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+
+                                     },
+                                     data: {
+                                         view_id: 'outgoing_ticket_response',
+                                         arguments: context.params.docId,
+                                     }
+                                 });
+                           }
 
 
                     });

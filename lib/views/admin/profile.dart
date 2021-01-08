@@ -14,6 +14,7 @@ import 'package:staff_portal/providers/profile_provider.dart';
 import 'package:staff_portal/services/auth_service.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 
 class Profile extends StatelessWidget with GetSnackbar {
   static const id = 'profile';
@@ -21,6 +22,7 @@ class Profile extends StatelessWidget with GetSnackbar {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = ProfileProvider.of(context);
     bloc.fetchProfile();

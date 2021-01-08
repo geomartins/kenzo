@@ -11,6 +11,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/incoming_ticket_scrollers.dart';
 import 'package:staff_portal/providers/incoming_ticket_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
+import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/views/admin/tickets/incoming_ticket_response.dart';
 
 class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
@@ -30,6 +31,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = IncomingTicketProvider.of(context);
     dependencies(bloc);

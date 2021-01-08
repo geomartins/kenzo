@@ -19,7 +19,7 @@ class OutgoingTicketCreateBloc extends Object with Validators {
   BehaviorSubject _editingControllers =
       new BehaviorSubject<List<TextEditingController>>();
 
-  //SINKS
+  ///////////////////////// SINKS
   void imagesSink(List<File> value) {
     _images.sink.add(value);
   }

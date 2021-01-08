@@ -29,18 +29,12 @@ class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () {
-                  bloc.statusSink('opened');
-                },
-                child: Icon(
-                    data.status == 'opened'
-                        ? FontAwesome.heart
-                        : FontAwesome.heart_o,
-                    color: data.status == 'opened'
-                        ? kPrimaryColor
-                        : kTertiaryColor),
-              ),
+              Icon(
+                  data.status == 'opened'
+                      ? FontAwesome.heart
+                      : FontAwesome.heart_o,
+                  color:
+                      data.status == 'opened' ? kPrimaryColor : kTertiaryColor),
               SizedBox(width: 5.0),
               Text(
                 'Open',
@@ -51,18 +45,13 @@ class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () {
-                  bloc.statusSink('pending');
-                },
-                child: Icon(
-                    data.status == 'pending'
-                        ? FontAwesome.heart
-                        : FontAwesome.heart_o,
-                    color: data.status == 'pending'
-                        ? kPrimaryColor
-                        : kTertiaryColor),
-              ),
+              Icon(
+                  data.status == 'pending'
+                      ? FontAwesome.heart
+                      : FontAwesome.heart_o,
+                  color: data.status == 'pending'
+                      ? kPrimaryColor
+                      : kTertiaryColor),
               SizedBox(width: 5.0),
               Text(
                 'Pending',
@@ -73,19 +62,12 @@ class CustomOutgoingTicketResponseStatusBar extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                onTap: () {
-                  bloc.statusSink('closed');
-                  print('closed');
-                },
-                child: Icon(
-                    data.status == 'closed'
-                        ? FontAwesome.heart
-                        : FontAwesome.heart_o,
-                    color: data.status == 'closed'
-                        ? kPrimaryColor
-                        : kTertiaryColor),
-              ),
+              Icon(
+                  data.status == 'closed'
+                      ? FontAwesome.heart
+                      : FontAwesome.heart_o,
+                  color:
+                      data.status == 'closed' ? kPrimaryColor : kTertiaryColor),
               SizedBox(width: 5.0),
               Text(
                 'Closed',
