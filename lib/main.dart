@@ -124,5 +124,6 @@ class _MyAppState extends State<MyApp> {
 }
 
 //TODO('Image Zoom')
-//TODO('Working on feedback form')
-//TODO('Get auth_bg image from the femi/ezenma')
+//TODO('Working on documentViewer')
+//TODO('Working on content with zainab')
+//TODO('Deploying to Google Playstore playstore')
