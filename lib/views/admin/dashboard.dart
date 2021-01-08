@@ -105,7 +105,7 @@ class Dashboard extends StatelessWidget {
         builder: (context, snapshot) {
           return Wrap(
             spacing: 20.0,
-            runSpacing: 40.0,
+            runSpacing: 45.0,
             children: [
               CustomTicketsCard(
                 title: 'Incoming',

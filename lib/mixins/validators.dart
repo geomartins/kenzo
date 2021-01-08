@@ -57,4 +57,14 @@ class Validators {
       sink.add(value.toLowerCase());
     },
   );
+
+  final validateDescription = StreamTransformer<String, String>.fromHandlers(
+    handleData: (description, sink) {
+      if (description.length > 3) {
+        sink.add(description);
+      } else {
+        sink.addError('Feedback length must be greater than 3');
+      }
+    },
+  );
 }

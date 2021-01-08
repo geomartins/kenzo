@@ -5,6 +5,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/providers/incoming_ticket_provider.dart';
 import 'package:staff_portal/providers/incoming_ticket_response_provider.dart';
 import 'package:staff_portal/providers/login_provider.dart';
+import 'package:staff_portal/providers/opinion_provider.dart';
 import 'package:staff_portal/providers/outgoing_ticket_create_provider.dart';
 import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
 import 'package:staff_portal/providers/outgoing_ticket_response_provider.dart';
@@ -56,51 +57,56 @@ class _MyAppState extends State<MyApp> {
             child: OutgoingTicketProvider(
               child: IncomingTicketResponseProvider(
                 child: IncomingTicketProvider(
-                  child: ProfileProvider(
-                    child: RegisterProvider(
-                      child: PasswordResetProvider(
-                        child: LoginProvider(
-                          child: GetMaterialApp(
-                            home: MaterialApp(
-                              navigatorKey: navigatorKey,
-                              title: kAppName,
-                              theme: ThemeData(
-                                  primarySwatch: kPrimaryColor,
-                                  textTheme: TextTheme(
-                                    headline6: TextStyle(
-                                      color: kTertiaryColor,
-                                      fontSize: 18.0,
-                                    ),
-                                  )),
-                              initialRoute: Splash.id,
-                              routes: {
-                                Home.id: (BuildContext ctx) => Home(),
-                                Splash.id: (BuildContext ctx) => Splash(),
-                                Welcome.id: (BuildContext ctx) => Welcome(),
-                                Login.id: (BuildContext ctx) => Login(),
-                                Register.id: (BuildContext ctx) => Register(),
-                                PasswordReset.id: (BuildContext ctx) =>
-                                    PasswordReset(),
-                                PageNotFound.id: (BuildContext ctx) =>
-                                    PageNotFound(),
-                                Dashboard.id: (BuildContext ctx) => Dashboard(),
-                                Profile.id: (BuildContext ctx) => Profile(),
-                                Opinion.id: (BuildContext ctx) => Opinion(),
-                                IncomingTicket.id: (BuildContext ctx) =>
-                                    IncomingTicket(),
-                                OutgoingTicket.id: (BuildContext ctx) =>
-                                    OutgoingTicket(),
-                                IncomingTicketResponse.id: (BuildContext ctx) =>
-                                    IncomingTicketResponse(),
-                                OutgoingTicketResponse.id: (BuildContext ctx) =>
-                                    OutgoingTicketResponse(),
-                                OutgoingTicketCreate.id: (BuildContext ctx) =>
-                                    OutgoingTicketCreate(),
-                              },
-                              onUnknownRoute: (settings) {
-                                return MaterialPageRoute(
-                                    builder: (_) => PageNotFound());
-                              },
+                  child: OpinionProvider(
+                    child: ProfileProvider(
+                      child: RegisterProvider(
+                        child: PasswordResetProvider(
+                          child: LoginProvider(
+                            child: GetMaterialApp(
+                              home: MaterialApp(
+                                navigatorKey: navigatorKey,
+                                title: kAppName,
+                                theme: ThemeData(
+                                    primarySwatch: kPrimaryColor,
+                                    textTheme: TextTheme(
+                                      headline6: TextStyle(
+                                        color: kTertiaryColor,
+                                        fontSize: 18.0,
+                                      ),
+                                    )),
+                                initialRoute: Splash.id,
+                                routes: {
+                                  Home.id: (BuildContext ctx) => Home(),
+                                  Splash.id: (BuildContext ctx) => Splash(),
+                                  Welcome.id: (BuildContext ctx) => Welcome(),
+                                  Login.id: (BuildContext ctx) => Login(),
+                                  Register.id: (BuildContext ctx) => Register(),
+                                  PasswordReset.id: (BuildContext ctx) =>
+                                      PasswordReset(),
+                                  PageNotFound.id: (BuildContext ctx) =>
+                                      PageNotFound(),
+                                  Dashboard.id: (BuildContext ctx) =>
+                                      Dashboard(),
+                                  Profile.id: (BuildContext ctx) => Profile(),
+                                  Opinion.id: (BuildContext ctx) => Opinion(),
+                                  IncomingTicket.id: (BuildContext ctx) =>
+                                      IncomingTicket(),
+                                  OutgoingTicket.id: (BuildContext ctx) =>
+                                      OutgoingTicket(),
+                                  IncomingTicketResponse.id:
+                                      (BuildContext ctx) =>
+                                          IncomingTicketResponse(),
+                                  OutgoingTicketResponse.id:
+                                      (BuildContext ctx) =>
+                                          OutgoingTicketResponse(),
+                                  OutgoingTicketCreate.id: (BuildContext ctx) =>
+                                      OutgoingTicketCreate(),
+                                },
+                                onUnknownRoute: (settings) {
+                                  return MaterialPageRoute(
+                                      builder: (_) => PageNotFound());
+                                },
+                              ),
                             ),
                           ),
                         ),

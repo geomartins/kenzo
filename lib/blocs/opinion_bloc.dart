@@ -1,66 +1,48 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/validators.dart';
-import 'package:staff_portal/models/user_model.dart';
-import 'package:staff_portal/services/auth_service.dart';
+import 'package:staff_portal/services/firestore_service.dart';
 
 class OpinionBloc extends Object with Validators {
-  BehaviorSubject _email = new BehaviorSubject<String>();
-  BehaviorSubject _password = new BehaviorSubject<String>();
+  BehaviorSubject _description = new BehaviorSubject<String>();
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
-  BehaviorSubject _passwordVisibility = new BehaviorSubject<bool>();
+  BehaviorSubject _editingControllers =
+      new BehaviorSubject<List<TextEditingController>>();
 
-  void emailSink(String value) {
-    _email.sink.add(value);
-  }
-
-  void passwordSink(String value) {
-    _password.sink.add(value);
+  void descriptionSink(String value) {
+    _description.sink.add(value);
   }
 
   void loadingSink(bool value) {
     _isLoading.sink.add(value);
   }
 
-  void passwordVisibilitySink(bool value) {
-    _passwordVisibility.sink.add(value);
+  void editingControllersSink(List<TextEditingController> value) {
+    _editingControllers.sink.add(value);
   }
 
-  Stream<String> get email => _email.stream.transform(validateEmail);
-  Stream<String> get password => _password.stream.transform(validatePassword);
+  Stream<String> get description =>
+      _description.stream.transform(validateDescription);
   Stream get isLoading => _isLoading.stream;
-  Stream get passwordVisibility => _passwordVisibility.stream;
 
-  Stream<bool> get submitValid =>
-      Rx.combineLatest2(email, password, (e, p) => true);
-
-  Future<UserModel> submit() async {
-    final String validEmail = _email.value;
-    final String validPassword = _password.value;
-
-    try {
-      UserModel user = await AuthService()
-          .loginWithEmailAndPassword(validEmail, validPassword);
-      if (user != null) {
-        return user;
-      } else {
-        return null;
-      }
-    } catch (e) {
+  Future<void> submit() async {
+    final String validDescription = _description.value;
+    print(validDescription);
+    await FirestoreService().createOpinion(description: validDescription);
+    clear();
+    try {} catch (e) {
       rethrow;
     }
   }
 
-//
-//  //Change Data
-//  Function(String) get changeEmail => _email.sink.add;
-//  Function(String) get changePassword => _password.sink.add;
-//
+  void clear() {
+    _editingControllers.value[0].text = '';
+  }
 
   void dispose() {
-    _email.close();
-    _password.close();
+    _description.close();
     _isLoading.close();
-    _passwordVisibility.close();
+    _editingControllers.close();
   }
 }

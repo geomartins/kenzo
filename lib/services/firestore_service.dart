@@ -227,4 +227,21 @@ class FirestoreService {
       );
     }
   }
+
+  Future<void> createOpinion({String description}) async {
+    try {
+      DocumentSnapshot snapshot =
+          await firestore.collection('users').doc(auth.currentUser.uid).get();
+      await firestore.collection('ticket_feedbacks').doc().set({
+        'description': description,
+        'user': snapshot.data(),
+        'created_at': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
 }
