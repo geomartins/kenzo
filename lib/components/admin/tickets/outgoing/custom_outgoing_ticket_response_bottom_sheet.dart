@@ -38,12 +38,11 @@ class CustomOutgoingTicketResponseBottomSheet extends StatelessWidget
           return SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
+              child: ListView(
+                reverse: true,
                 children: [
-                  _buildImagePreview(context, bloc, imagesSnapshot),
                   _buildReplyFieldWithIcons(context, bloc),
+                  _buildImagePreview(context, bloc, imagesSnapshot),
                 ],
               ),
               width: double.infinity,

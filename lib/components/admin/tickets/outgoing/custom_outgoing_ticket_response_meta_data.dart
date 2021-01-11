@@ -30,27 +30,12 @@ class CustomOutgoingTicketResponseMetaData extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.accessibility_new_outlined,
-                        color: kPrimaryColor, size: 20.0),
-                    SizedBox(width: 3.0),
-                    Text(
-                      data.user['firstname'] != null
-                          ? data.user['firstname'] + ' ' + data.user['lastname']
-                          : data.user['department'],
-                      style: TextStyle(fontSize: 14.0),
-                    ),
-                  ],
-                ),
-                SizedBox(width: 20.0),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
                     Icon(Icons.account_balance_outlined,
                         color: kPrimaryColor, size: 20.0),
                     SizedBox(width: 3.0),
                     Text(
-                      data.user['department'] != null
-                          ? data.user['department']
+                      data.toDepartment != null
+                          ? data.toDepartment
                           : 'Unknown department',
                       style: TextStyle(fontSize: 14.0),
                     ),

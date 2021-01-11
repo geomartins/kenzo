@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:staff_portal/config/constants.dart';
+import 'package:staff_portal/providers/download_service_provider.dart';
 import 'package:staff_portal/providers/incoming_ticket_provider.dart';
 import 'package:staff_portal/providers/incoming_ticket_response_provider.dart';
 import 'package:staff_portal/providers/login_provider.dart';
@@ -33,7 +35,11 @@ import './views/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(
+      debug: true // optional: set false to disable printing logs to console
+      );
   await Firebase.initializeApp();
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MyApp());
@@ -50,62 +56,66 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return PreferenceProvider(
-      child: TicketsProvider(
-        child: OutgoingTicketResponseProvider(
-          child: OutgoingTicketCreateProvider(
-            child: OutgoingTicketProvider(
-              child: IncomingTicketResponseProvider(
-                child: IncomingTicketProvider(
-                  child: OpinionProvider(
-                    child: ProfileProvider(
-                      child: RegisterProvider(
-                        child: PasswordResetProvider(
-                          child: LoginProvider(
-                            child: GetMaterialApp(
-                              home: MaterialApp(
-                                navigatorKey: navigatorKey,
-                                title: kAppName,
-                                theme: ThemeData(
-                                    primarySwatch: kPrimaryColor,
-                                    textTheme: TextTheme(
-                                      headline6: TextStyle(
-                                        color: kTertiaryColor,
-                                        fontSize: 18.0,
-                                      ),
-                                    )),
-                                initialRoute: Splash.id,
-                                routes: {
-                                  Home.id: (BuildContext ctx) => Home(),
-                                  Splash.id: (BuildContext ctx) => Splash(),
-                                  Welcome.id: (BuildContext ctx) => Welcome(),
-                                  Login.id: (BuildContext ctx) => Login(),
-                                  Register.id: (BuildContext ctx) => Register(),
-                                  PasswordReset.id: (BuildContext ctx) =>
-                                      PasswordReset(),
-                                  PageNotFound.id: (BuildContext ctx) =>
-                                      PageNotFound(),
-                                  Dashboard.id: (BuildContext ctx) =>
-                                      Dashboard(),
-                                  Profile.id: (BuildContext ctx) => Profile(),
-                                  Opinion.id: (BuildContext ctx) => Opinion(),
-                                  IncomingTicket.id: (BuildContext ctx) =>
-                                      IncomingTicket(),
-                                  OutgoingTicket.id: (BuildContext ctx) =>
-                                      OutgoingTicket(),
-                                  IncomingTicketResponse.id:
-                                      (BuildContext ctx) =>
-                                          IncomingTicketResponse(),
-                                  OutgoingTicketResponse.id:
-                                      (BuildContext ctx) =>
-                                          OutgoingTicketResponse(),
-                                  OutgoingTicketCreate.id: (BuildContext ctx) =>
-                                      OutgoingTicketCreate(),
-                                },
-                                onUnknownRoute: (settings) {
-                                  return MaterialPageRoute(
-                                      builder: (_) => PageNotFound());
-                                },
+    return DownloadServiceProvider(
+      child: PreferenceProvider(
+        child: TicketsProvider(
+          child: OutgoingTicketResponseProvider(
+            child: OutgoingTicketCreateProvider(
+              child: OutgoingTicketProvider(
+                child: IncomingTicketResponseProvider(
+                  child: IncomingTicketProvider(
+                    child: OpinionProvider(
+                      child: ProfileProvider(
+                        child: RegisterProvider(
+                          child: PasswordResetProvider(
+                            child: LoginProvider(
+                              child: GetMaterialApp(
+                                home: MaterialApp(
+                                  navigatorKey: navigatorKey,
+                                  title: kAppName,
+                                  theme: ThemeData(
+                                      primarySwatch: kPrimaryColor,
+                                      textTheme: TextTheme(
+                                        headline6: TextStyle(
+                                          color: kTertiaryColor,
+                                          fontSize: 18.0,
+                                        ),
+                                      )),
+                                  initialRoute: Splash.id,
+                                  routes: {
+                                    Home.id: (BuildContext ctx) => Home(),
+                                    Splash.id: (BuildContext ctx) => Splash(),
+                                    Welcome.id: (BuildContext ctx) => Welcome(),
+                                    Login.id: (BuildContext ctx) => Login(),
+                                    Register.id: (BuildContext ctx) =>
+                                        Register(),
+                                    PasswordReset.id: (BuildContext ctx) =>
+                                        PasswordReset(),
+                                    PageNotFound.id: (BuildContext ctx) =>
+                                        PageNotFound(),
+                                    Dashboard.id: (BuildContext ctx) =>
+                                        Dashboard(),
+                                    Profile.id: (BuildContext ctx) => Profile(),
+                                    Opinion.id: (BuildContext ctx) => Opinion(),
+                                    IncomingTicket.id: (BuildContext ctx) =>
+                                        IncomingTicket(),
+                                    OutgoingTicket.id: (BuildContext ctx) =>
+                                        OutgoingTicket(),
+                                    IncomingTicketResponse.id:
+                                        (BuildContext ctx) =>
+                                            IncomingTicketResponse(),
+                                    OutgoingTicketResponse.id:
+                                        (BuildContext ctx) =>
+                                            OutgoingTicketResponse(),
+                                    OutgoingTicketCreate.id:
+                                        (BuildContext ctx) =>
+                                            OutgoingTicketCreate(),
+                                  },
+                                  onUnknownRoute: (settings) {
+                                    return MaterialPageRoute(
+                                        builder: (_) => PageNotFound());
+                                  },
+                                ),
                               ),
                             ),
                           ),
@@ -123,7 +133,8 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Image Zoom')
-//TODO('Working on documentViewer')
+//TODO('Working on Author on both OutgoingTicketResponse and IncomingTicketResponse')
+//TODO('Working on appBar for CustomDocumentViewer')
+//TODO('Working on default image for files')
 //TODO('Working on content with zainab')
 //TODO('Deploying to Google Playstore playstore')

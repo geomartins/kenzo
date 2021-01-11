@@ -17,31 +17,33 @@ class Opinion extends StatelessWidget {
     FirebaseMessagingService().configure(context);
     final height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      bottomNavigationBar: CustomBottomNavigationBar(),
-      body: SafeArea(
-        minimum: EdgeInsets.symmetric(horizontal: 0.0),
-        child: SingleChildScrollView(
-          child: Container(
-              height: height,
-              decoration: BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage('assets/images/bg3.jpeg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(),
-                  _buildIconWithTitle(context),
-                  CustomOpinionForm(
-                    bloc: bloc,
-                    descriptionTextEditingController:
-                        descriptionTextEditingController,
+    return CustomAuthBuilder(
+      child: Scaffold(
+        bottomNavigationBar: CustomBottomNavigationBar(),
+        body: SafeArea(
+          minimum: EdgeInsets.symmetric(horizontal: 0.0),
+          child: SingleChildScrollView(
+            child: Container(
+                height: height,
+                decoration: BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage('assets/images/bg3.jpeg'),
+                    fit: BoxFit.cover,
                   ),
-                ],
-              )),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(),
+                    _buildIconWithTitle(context),
+                    CustomOpinionForm(
+                      bloc: bloc,
+                      descriptionTextEditingController:
+                          descriptionTextEditingController,
+                    ),
+                  ],
+                )),
+          ),
         ),
       ),
     );
@@ -56,7 +58,7 @@ class Opinion extends StatelessWidget {
         //   color: kPrimaryColor,
         // ),
         Image.asset(
-          'assets/images/ticket-logo.png',
+          'assets/images/ticket-logo-100.png',
           width: 100.0,
           height: 100.0,
         ),

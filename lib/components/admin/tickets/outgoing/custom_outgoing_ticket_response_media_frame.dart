@@ -1,57 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:staff_portal/components/custom_file_action_buttons.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
+import 'package:staff_portal/providers/download_service_provider.dart';
 
-class CustomOutgoingTicketResponseMediaFrame extends StatefulWidget {
+class CustomOutgoingTicketResponseMediaFrame extends StatelessWidget {
   final TicketModel data;
-  CustomOutgoingTicketResponseMediaFrame({@required this.data});
 
-  @override
-  _CustomOutgoingTicketResponseMediaFrameState createState() =>
-      _CustomOutgoingTicketResponseMediaFrameState();
-}
-
-class _CustomOutgoingTicketResponseMediaFrameState
-    extends State<CustomOutgoingTicketResponseMediaFrame> {
-  final transformationController = TransformationController();
+  const CustomOutgoingTicketResponseMediaFrame({this.data});
   @override
   Widget build(BuildContext context) {
-    return widget.data.images.length < 1
+    final dspBloc = DownloadServiceProvider.of(context);
+    return data.images.length < 1
         ? Container()
         : Container(
             width: double.infinity,
             height: 300.0,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: widget.data.images.length,
+              itemCount: data.images.length,
               itemBuilder: (context, int index) {
-                return Container(
-                  key: Key(index.toString()),
-                  margin: EdgeInsets.all(10.0),
-                  width: widget.data.images.length < 2
-                      ? MediaQuery.of(context).size.width
-                      : MediaQuery.of(context).size.width / 2,
-                  height: 200,
-                  color: kTertiaryColor.shade200,
-                  child: InteractiveViewer(
-                    transformationController:
-                        transformationController, // pass the transformation controller
-                    onInteractionEnd: (details) {
-                      setState(() {
-                        transformationController.toScene(Offset
-                            .zero); // return to normal size after scaling has ended
-                      });
-                    },
-                    boundaryMargin: EdgeInsets.all(20.0),
-                    minScale: 0.1, // min scale
-                    maxScale: 4.6, // max scale
-                    scaleEnabled: true,
-                    panEnabled: true,
-                    child: Image.network(
-                      widget.data.images[index.toInt()],
-                      fit: BoxFit.cover,
+                return Stack(
+                  children: [
+                    Container(
+                      key: Key(index.toString()),
+                      margin: EdgeInsets.all(10.0),
+                      width: data.images.length < 2
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width / 2,
+                      color: kTertiaryColor.shade200,
+                      child: Image.network(
+                        data.images[index.toInt()],
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
+                    CustomFileActionButtons(
+                        dspBloc: dspBloc, url: data.images[index.toInt()]),
+                  ],
                 );
               },
             ),

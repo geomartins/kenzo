@@ -50,10 +50,14 @@ class IncomingTicketResponseBloc extends Object with Validators {
   Stream get reply => _reply.stream;
 
   Stream<TicketModel> get ticketData => FirebaseFirestore.instance
-      .collection('tickets')
-      .doc(_ticketID.value)
-      .snapshots()
-      .map((data) => TicketModel.fromMap(data.data()));
+          .collection('tickets')
+          .doc(_ticketID.value)
+          .snapshots()
+          .map((data) {
+        Map<String, dynamic> result = data.data();
+        result['id'] = data.id;
+        return TicketModel.fromMap(result);
+      });
 
   Stream<List<TicketResponseModel>> get ticketResponseData =>
       FirebaseFirestore.instance
@@ -65,7 +69,9 @@ class IncomingTicketResponseBloc extends Object with Validators {
           .map((data) {
         List<TicketResponseModel> result = [];
         data.docs.forEach((doc) {
-          result.add(TicketResponseModel.fromMap(doc.data()));
+          Map<String, dynamic> data = doc.data();
+          data['id'] = doc.id;
+          result.add(TicketResponseModel.fromMap(data));
         });
         return result;
       });

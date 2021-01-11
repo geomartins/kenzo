@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
+import 'package:mime/mime.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as p;
 
@@ -13,7 +14,12 @@ class StorageService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<String> uploadFile({File image, String path}) async {
-    String extension = p.extension(image.path);
+    print('Path is  ---------------- ${image.path}');
+    final x = lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]);
+    String extension = '.' + x.split('/')[1];
+    print('Extension is  ---------------- $extension');
+    print('Path is  ---------------- ${image.path}');
+
     try {
       final storageReference =
           storage.ref().child(path).child(Uuid().v4() + extension);

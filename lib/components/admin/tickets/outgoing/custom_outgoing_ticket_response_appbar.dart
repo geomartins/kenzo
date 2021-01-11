@@ -18,10 +18,10 @@ class CustomOutgoingTicketResponseAppbar extends AppBar {
           iconTheme: IconThemeData(color: Colors.black87),
           title: ListTile(
             leading: CircleAvatar(
-              child: Text(data.toDepartment.substring(0, 3).toUpperCase()),
+              child: Text('OTR'),
               backgroundColor: kPrimaryColor.shade700,
             ),
-            title: Text(data.toDepartment),
+            title: Text(data.id.toString()),
             subtitle: Text(Dates().timeInSeconds(data.createdAt.toDate())),
             trailing: StreamBuilder<bool>(
                 stream: bloc.isLoading,

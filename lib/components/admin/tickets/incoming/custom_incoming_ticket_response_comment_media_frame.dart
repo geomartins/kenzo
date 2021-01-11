@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_response_model.dart';
+import 'package:staff_portal/providers/download_service_provider.dart';
+
+import '../../../custom_file_action_buttons.dart';
 
 class CustomIncomingTicketResponseCommentMediaFrame extends StatelessWidget {
   final TicketResponseModel data;
   CustomIncomingTicketResponseCommentMediaFrame({@required this.data});
-  final transformationController = TransformationController();
   @override
   Widget build(BuildContext context) {
+    final dspBloc = DownloadServiceProvider.of(context);
     return data.images.length < 1
         ? Container()
         : Container(
@@ -17,24 +20,23 @@ class CustomIncomingTicketResponseCommentMediaFrame extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: data.images.length,
               itemBuilder: (context, int index) {
-                return Container(
-                  key: Key(index.toString()),
-                  margin: EdgeInsets.all(10.0),
-                  width: data.images.length < 2
-                      ? MediaQuery.of(context).size.width
-                      : MediaQuery.of(context).size.width / 2,
-                  height: 200,
-                  color: kTertiaryColor.shade200,
-                  child: GestureDetector(
-                    onTap: () {
-                      // print('Open this');
-                      // OpenFile.open(data.images[index.toInt()]);
-                    },
-                    child: Image.network(
-                      data.images[index.toInt()],
-                      fit: BoxFit.cover,
+                return Stack(
+                  children: [
+                    Container(
+                      key: Key(index.toString()),
+                      margin: EdgeInsets.all(10.0),
+                      width: data.images.length < 2
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width / 2,
+                      color: kTertiaryColor.shade200,
+                      child: Image.network(
+                        data.images[index.toInt()],
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
+                    CustomFileActionButtons(
+                        dspBloc: dspBloc, url: data.images[index.toInt()]),
+                  ],
                 );
               },
             ),

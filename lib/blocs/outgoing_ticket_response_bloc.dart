@@ -49,7 +49,10 @@ class OutgoingTicketResponseBloc extends Object with Validators {
           .doc(_ticketID.value)
           .snapshots()
           .map((data) {
-        final result = TicketModel.fromMap(data.data());
+        Map<String, dynamic> dataExt = data.data();
+        dataExt['id'] = data.id;
+
+        final result = TicketModel.fromMap(dataExt);
         notifierSink(result.toDepartment + '_ticket_response');
         notifierViewIdSink('incoming_ticket_response');
         return result;
@@ -79,6 +82,7 @@ class OutgoingTicketResponseBloc extends Object with Validators {
   String get validReply => _reply.value;
 
   Future<void> submit() async {
+    print('Valid Images ----------------- ${validImages()}');
     try {
       List<String> imageURLs = await StorageService()
           .uploadFiles(images: validImages(), path: 'uploads/tickets/images');

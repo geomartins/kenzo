@@ -134,7 +134,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
                   title: datas[index].title != null
                       ? datas[index].title
                       : 'UnknowX',
-                  department: datas[index].toDepartment,
+                  department: datas[index].fromDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
                       context, IncomingTicketResponse.id,
@@ -168,7 +168,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
                   title: datas[index].title != null
                       ? datas[index].title
                       : 'UnknowX',
-                  department: datas[index].toDepartment,
+                  department: datas[index].fromDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
                       context, IncomingTicketResponse.id,
@@ -201,7 +201,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
                   title: datas[index].title != null
                       ? datas[index].title
                       : 'UnknowX',
-                  department: datas[index].toDepartment,
+                  department: datas[index].fromDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
                       context, IncomingTicketResponse.id,

@@ -10,7 +10,7 @@ class DeviceFile with GetSnackbar {
       bloc, context, List<String> extensions, Function next) async {
     List<File> files = await FilePicker.getMultiFile(
       type: FileType.custom,
-      allowedExtensions: extensions ?? ['jpg', 'pdf', 'doc'],
+      //allowedExtensions: extensions ?? ['jpg', 'pdf', 'doc', 'jpeg'],
     );
     if (files != null) {
       bloc.imagesSink(files);
