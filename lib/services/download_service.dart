@@ -1,6 +1,3 @@
-import 'dart:isolate';
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +7,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:storage_path/storage_path.dart';
+import 'package:uuid/uuid.dart';
 
 class DownloadService with GetSnackbar {
   final DownloadServiceBloc bloc;
@@ -22,8 +20,9 @@ class DownloadService with GetSnackbar {
     bloc.loadingSink(true);
     try {
       var dir = await getExternalStorageDirectory();
-      Response response = await dio.download(
-          this.url, "${dir.path}/myimage.jpg", onReceiveProgress: (rec, total) {
+      Response response = await dio
+          .download(this.url, "${dir.path}/${Uuid().v4()}",
+              onReceiveProgress: (rec, total) {
         print('Recieved: $rec  ......... Total: $total');
         final String progress = ((rec / total) * 100).toStringAsFixed(0) + '%';
         bloc.progressSink(progress);

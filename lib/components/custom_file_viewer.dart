@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:pinch_zoom_image_last/pinch_zoom_image_last.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -11,7 +10,12 @@ class CustomFileViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Container(

@@ -5,6 +5,7 @@ import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_t
 import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_response_media_frame.dart';
 import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_response_meta_data.dart';
 import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_response_status_bar.dart';
+import 'package:staff_portal/components/custom_author_box.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/models/ticket_model.dart';
@@ -77,6 +78,13 @@ class IncomingTicketResponse extends StatelessWidget with GetSnackbar {
                             SizedBox(height: 10.0),
                             CustomIncomingTicketResponseMetaData(
                               data: ticketDataSnapshot.data,
+                            ),
+                            SizedBox(height: 5.0),
+                            CustomAuthorBox(
+                              author:
+                                  ticketDataSnapshot.data.user['firstname'] +
+                                      ' ' +
+                                      ticketDataSnapshot.data.user['lastname'],
                             ),
                             SizedBox(height: 5.0),
                             CustomIncomingTicketResponseMediaFrame(

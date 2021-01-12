@@ -133,8 +133,10 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-//TODO('Working on Author on both OutgoingTicketResponse and IncomingTicketResponse')
-//TODO('Working on appBar for CustomDocumentViewer')
 //TODO('Working on default image for files')
+//TODO('Get default document design from Ezenma')
+//TODO('Writing Cloud Security Rules')
+//TODO('Making Sure Registered User is Approved before login in')
+//TODO('COnfirm if password reset is working')
 //TODO('Working on content with zainab')
 //TODO('Deploying to Google Playstore playstore')

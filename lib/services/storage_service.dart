@@ -5,7 +5,6 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/services.dart';
 import 'package:mime/mime.dart';
 import 'package:uuid/uuid.dart';
-import 'package:path/path.dart' as p;
 
 class StorageService {
   firebase_storage.FirebaseStorage storage =
@@ -14,11 +13,11 @@ class StorageService {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<String> uploadFile({File image, String path}) async {
-    print('Path is  ---------------- ${image.path}');
+    // print('Path is  ---------------- ${image.path}');
     final x = lookupMimeType(image.path, headerBytes: [0xFF, 0xD8]);
     String extension = '.' + x.split('/')[1];
-    print('Extension is  ---------------- $extension');
-    print('Path is  ---------------- ${image.path}');
+    // print('Extension is  ---------------- $extension');
+    // print('Path is  ---------------- ${image.path}');
 
     try {
       final storageReference =

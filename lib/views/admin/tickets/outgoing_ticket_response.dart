@@ -3,17 +3,15 @@ import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_t
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_bottom_sheet.dart';
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_meta_data.dart';
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_status_bar.dart';
+import 'package:staff_portal/components/custom_author_box.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
 import 'package:staff_portal/models/ticket_model.dart';
-import 'package:staff_portal/providers/download_service_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/outgoing_ticket_response_provider.dart';
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_comments.dart';
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_response_media_frame.dart';
-
 import 'package:staff_portal/mixins/get_snackbar.dart';
-import 'package:staff_portal/services/download_service.dart';
 import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/utilities/device_file.dart';
 import '../../../components/builders/custom_auth_builder.dart';
@@ -28,7 +26,6 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
     FirebaseMessagingService().configure(context);
     PreferenceProvider.of(context).activeSink(id);
     final bloc = OutgoingTicketResponseProvider.of(context);
-    final dspBloc = DownloadServiceProvider.of(context);
     bloc.ticketIDSink(ModalRoute.of(context).settings.arguments);
 
     return CustomAuthBuilder(
@@ -85,6 +82,13 @@ class OutgoingTicketResponse extends StatelessWidget with GetSnackbar {
                             SizedBox(height: 10.0),
                             CustomOutgoingTicketResponseMetaData(
                               data: ticketDataSnapshot.data,
+                            ),
+                            SizedBox(height: 5.0),
+                            CustomAuthorBox(
+                              author:
+                                  ticketDataSnapshot.data.user['firstname'] +
+                                      ' ' +
+                                      ticketDataSnapshot.data.user['lastname'],
                             ),
                             SizedBox(height: 5.0),
                             CustomOutgoingTicketResponseMediaFrame(
