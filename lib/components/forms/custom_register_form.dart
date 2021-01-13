@@ -6,7 +6,6 @@ import 'package:staff_portal/blocs/register_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/register_provider.dart';
-import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/login.dart';
 import '../custom_flat_button.dart';
 import '../custom_offstage_progress_indicator.dart';
@@ -16,6 +15,7 @@ class CustomRegisterForm extends StatelessWidget with GetSnackbar {
   @override
   Widget build(BuildContext context) {
     final bloc = RegisterProvider.of(context);
+    bloc.fetchDepartmentList();
     return Positioned(
       child: ClipPath(
         clipper: WaveClipperTwo(reverse: true),
@@ -33,6 +33,8 @@ class CustomRegisterForm extends StatelessWidget with GetSnackbar {
               SizedBox(height: 5.0),
               buildLastname(bloc),
               SizedBox(height: 5.0),
+              buildDepartment(bloc),
+              SizedBox(height: 5.0),
               buildEmail(bloc),
               SizedBox(height: 5.0),
               buildPassword(bloc),
@@ -48,6 +50,37 @@ class CustomRegisterForm extends StatelessWidget with GetSnackbar {
       left: 0,
       right: 0,
     );
+  }
+
+  Widget buildDepartment(RegisterBloc bloc) {
+    return StreamBuilder<String>(
+        stream: bloc.department,
+        builder: (context, snapshot) {
+          return StreamBuilder<bool>(
+              stream: bloc.isLoading,
+              initialData: false,
+              builder: (context, isLoadingSnapshot) {
+                return StreamBuilder<List<String>>(
+                    stream: bloc.departmentList,
+                    builder: (context, departmentListSnapshot) {
+                      return DropdownButtonFormField(
+                        hint: Text('Select department'),
+                        onChanged: (newValue) => bloc.departmentSink(newValue),
+                        items: _buildDepartmentDropDownMenu(
+                            departmentListSnapshot.data),
+                        decoration: InputDecoration(
+                          enabled: !isLoadingSnapshot.data,
+                          contentPadding: EdgeInsets.all(10.0),
+                          prefixIcon: Icon(
+                            Icons.home_outlined,
+                            size: 25.0,
+                          ),
+                          errorText: snapshot.error,
+                        ),
+                      );
+                    });
+              });
+        });
   }
 
   Widget buildFirstname(RegisterBloc bloc) {
@@ -214,8 +247,6 @@ class CustomRegisterForm extends StatelessWidget with GetSnackbar {
                                   try {
                                     bloc.loadingSink(true);
                                     await bloc.submit();
-                                    Navigator.pushReplacementNamed(
-                                        context, Dashboard.id);
                                   } on PlatformException catch (e) {
                                     buildCustomSnackbar(
                                         titleText: 'Ooops!!!',
@@ -286,5 +317,16 @@ class CustomRegisterForm extends StatelessWidget with GetSnackbar {
         onPressed: () => Navigator.pushNamed(context, Login.id),
       ),
     );
+  }
+
+  List<DropdownMenuItem> _buildDepartmentDropDownMenu(List<String> datas) {
+    List<DropdownMenuItem> result = [];
+    for (String department in datas ?? []) {
+      result.add(DropdownMenuItem(
+        child: Text(department),
+        value: department,
+      ));
+    }
+    return result;
   }
 }

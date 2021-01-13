@@ -5,6 +5,7 @@ class ProfileModel {
   final String email;
   final String role;
   final String department;
+  final bool approved;
   final String coverUrl;
 
   ProfileModel.fromFirestore(Map<String, dynamic> user)
@@ -13,8 +14,9 @@ class ProfileModel {
         middlename = user['middlename'],
         lastname = user['lastname'],
         role = user['role'],
-        coverUrl = user['cover_url'],
-        department = user['department'];
+        approved = user['approved'],
+        coverUrl = user['cover_url'] ?? 'https://agropark.ng/ticket-logo.png',
+        department = user['department'] ?? 'unknown';
 
   Map<String, dynamic> toMap() {
     return {

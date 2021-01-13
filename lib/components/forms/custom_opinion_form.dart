@@ -45,7 +45,7 @@ class CustomOpinionForm extends StatelessWidget with GetSnackbar {
                                 filled: true,
                                 fillColor: kTertiaryColor.shade100,
                                 hintText:
-                                    'Kindly give us your feedback, complains, improvement and organisation .....',
+                                    'Help us serve you better by giving us your feedback and suggestion for better perfomance ....',
                                 errorText: descriptionSnapshot.error,
                                 border: new OutlineInputBorder(
                                   borderSide: BorderSide.none,

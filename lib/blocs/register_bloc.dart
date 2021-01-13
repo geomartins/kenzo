@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:staff_portal/mixins/validators.dart';
 import 'package:staff_portal/services/auth_service.dart';
+import 'package:staff_portal/services/firestore_service.dart';
 
 class RegisterBloc extends Object with Validators {
   BehaviorSubject _firstname = new BehaviorSubject<String>();
@@ -10,6 +11,9 @@ class RegisterBloc extends Object with Validators {
 
   BehaviorSubject _email = new BehaviorSubject<String>();
   BehaviorSubject _password = new BehaviorSubject<String>();
+
+  BehaviorSubject _department = new BehaviorSubject<String>();
+  BehaviorSubject _departmentList = new BehaviorSubject<List<String>>();
 
   BehaviorSubject _isLoading = new BehaviorSubject<bool>();
   BehaviorSubject _passwordVisibility = new BehaviorSubject<bool>();
@@ -24,6 +28,14 @@ class RegisterBloc extends Object with Validators {
 
   void lastnameSink(String value) {
     _lastname.sink.add(value);
+  }
+
+  void departmentSink(String value) {
+    _department.sink.add(value);
+  }
+
+  void departmentListSink(List<String> value) {
+    _departmentList.sink.add(value);
   }
 
   void emailSink(String value) {
@@ -52,9 +64,17 @@ class RegisterBloc extends Object with Validators {
   Stream<String> get password => _password.stream.transform(validatePassword);
   Stream get isLoading => _isLoading.stream;
   Stream get passwordVisibility => _passwordVisibility.stream;
+  Stream get department => _department.stream;
+  Stream get departmentList => _departmentList.stream;
 
-  Stream<bool> get submitValid => Rx.combineLatest5(firstname, middlename,
-      lastname, email, password, (f, m, l, e, p) => true);
+  Stream<bool> get submitValid => Rx.combineLatest6(firstname, middlename,
+      lastname, email, password, department, (f, m, l, e, p, d) => true);
+
+  void fetchDepartmentList() async {
+    List<String> result = await FirestoreService().getDepartmentList();
+    print('Department List Result $result');
+    departmentListSink(result);
+  }
 
   Future<void> submit() async {
     final String validFirstname = _firstname.value;
@@ -62,15 +82,16 @@ class RegisterBloc extends Object with Validators {
     final String validLastname = _lastname.value;
     final String validEmail = _email.value;
     final String validPassword = _password.value;
+    final String validDepartment = _department.value;
 
     try {
       await AuthService().createAccount(
-        email: validEmail,
-        password: validPassword,
-        firstname: validFirstname,
-        lastname: validLastname,
-        middlename: validMiddlename,
-      );
+          email: validEmail.toLowerCase(),
+          password: validPassword,
+          firstname: validFirstname.toLowerCase(),
+          lastname: validLastname.toLowerCase(),
+          middlename: validMiddlename.toLowerCase(),
+          department: validDepartment);
     } catch (e) {
       rethrow;
     }
@@ -81,6 +102,8 @@ class RegisterBloc extends Object with Validators {
     _middlename.close();
     _lastname.close();
 
+    _department.close();
+    _departmentList.close();
     _email.close();
     _password.close();
     _isLoading.close();

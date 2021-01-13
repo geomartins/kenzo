@@ -51,6 +51,19 @@ class LoginBloc extends Object with Validators {
     }
   }
 
+  // Future<bool> checkAccountApproval() async {
+  //   try {
+  //     ProfileModel profileModel = await FirestoreService().getProfileByUID();
+  //     if (profileModel == null) {
+  //       return false;
+  //     } else {
+  //       return profileModel.approved;
+  //     }
+  //   } catch (e) {
+  //     rethrow;
+  //   }
+  // }
+
 //
 //  //Change Data
 //  Function(String) get changeEmail => _email.sink.add;

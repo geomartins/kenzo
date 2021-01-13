@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:intl/intl.dart';
 import 'package:staff_portal/blocs/tickets_bloc.dart';
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_flat_button.dart';
@@ -8,6 +10,7 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/tickets_model.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/providers/tickets_provider.dart';
+import 'package:staff_portal/services/auth_service.dart';
 import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/views/admin/opinion.dart';
 import 'package:staff_portal/views/admin/profile.dart';
@@ -57,14 +60,14 @@ class Dashboard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Choose The Owner',
+        Text('Hi ${AuthService().getDisplayName(type: 'first') ?? 'Staff'}',
             style: Theme.of(context).textTheme.headline5.copyWith(
                   fontWeight: FontWeight.w500,
                   letterSpacing: 1.5,
                 )),
         SizedBox(height: 5.0),
         Text(
-          'Hello Master, I want to know more about u',
+          'Relax while we keep an eye on your tickets',
           style: Theme.of(context).textTheme.caption.copyWith(
                 fontSize: 16.0,
                 color: kTertiaryColor,

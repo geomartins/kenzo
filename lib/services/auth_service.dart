@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:staff_portal/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   Future<UserModel> loginWithEmailAndPassword(
       String email, String password) async {
     try {
@@ -57,7 +59,8 @@ class AuthService {
       String password,
       String firstname,
       String middlename,
-      String lastname}) async {
+      String lastname,
+      String department}) async {
     try {
       UserCredential credentials = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -69,15 +72,35 @@ class AuthService {
         'lastname': lastname,
         'email': user.email,
         'uid': user.uid,
-        'dept': 'unknown',
+        'dept': department,
         'role': 'unknown',
+        'approved': false,
         'created_at': FieldValue.serverTimestamp(),
       });
+      await auth.currentUser
+          .updateProfile(displayName: firstname + ' ' + middlename);
     } catch (e) {
       throw PlatformException(
         code: e.code,
         message: e.message,
       );
     }
+  }
+
+  String getDisplayName({String type}) {
+    String displayName = auth.currentUser.displayName;
+
+    if (displayName == null) {
+      return null;
+    }
+    if (type == 'ucwords') {
+      String firstname = toBeginningOfSentenceCase(displayName.split(' ')[0]);
+      String lastname = toBeginningOfSentenceCase(displayName.split(' ')[1]);
+      return firstname + ' ' + lastname;
+    }
+    if (type == 'first') {
+      return toBeginningOfSentenceCase(displayName.split(' ')[0]);
+    }
+    return displayName;
   }
 }

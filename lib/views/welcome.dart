@@ -61,7 +61,7 @@ class Welcome extends StatelessWidget {
                           height: 10.0,
                         ),
                         Text(
-                          'We deliver water at any point in the earth within 30 minutes',
+                          'Keep track of your requests and get an instant update',
                         ),
                       ],
                     ),

@@ -44,7 +44,7 @@ class Register extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 70.0,
+            height: 20.0,
           ),
           Text('Create',
               style: TextStyle(

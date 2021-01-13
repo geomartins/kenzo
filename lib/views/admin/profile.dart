@@ -32,10 +32,12 @@ class Profile extends StatelessWidget with GetSnackbar {
         key: _drawerKey,
         appBar: AppBar(
           backgroundColor: Colors.white,
-          title: Text(
-            'Martins Abiodun',
-            style: TextStyle(color: Colors.black),
-          ),
+          title: AuthService().getDisplayName(type: 'ucwords') != null
+              ? Text(
+                  AuthService().getDisplayName(type: 'ucwords'),
+                  style: TextStyle(color: Colors.black),
+                )
+              : Container(),
           leading: StreamBuilder<bool>(
               stream: bloc.isLoading,
               initialData: false,
@@ -104,9 +106,7 @@ class Profile extends StatelessWidget with GetSnackbar {
                       scale: 50.0,
                       alignment: Alignment.topCenter,
                       image: snapshot.hasData && snapshot.data != null
-                          ? NetworkImage(
-                              snapshot.data.coverUrl,
-                            )
+                          ? NetworkImage(snapshot.data.coverUrl)
                           : AssetImage(kDefaultCoverUrl),
                     ),
                     borderRadius: BorderRadius.only(
