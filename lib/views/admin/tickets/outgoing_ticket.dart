@@ -6,7 +6,6 @@ import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_t
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_loading_container.dart';
 import 'package:staff_portal/components/admin/tickets/outgoing/custom_outgoing_ticket_search.dart';
 import 'package:staff_portal/components/builders/custom_approved_user_builder.dart';
-
 import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/config/constants.dart';
@@ -15,7 +14,7 @@ import 'package:staff_portal/providers/outgoing_ticket_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/services/firebase_messaging_service.dart';
 import 'package:staff_portal/views/admin/tickets/outgoing_ticket_create.dart';
-import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
+import 'package:staff_portal/views/admin/tickets/ticket_response.dart';
 
 class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
   static const id = 'outgoing_ticket';
@@ -150,7 +149,7 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
                   department: datas[index].toDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
-                      context, OutgoingTicketResponse.id,
+                      context, TicketResponse.id,
                       arguments: datas[index].id),
                 );
               });
@@ -183,7 +182,7 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
                   department: datas[index].toDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
-                      context, OutgoingTicketResponse.id,
+                      context, TicketResponse.id,
                       arguments: datas[index].id),
                 );
               });
@@ -216,7 +215,7 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
                   department: datas[index].toDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
-                      context, OutgoingTicketResponse.id,
+                      context, TicketResponse.id,
                       arguments: datas[index].id),
                 );
               });

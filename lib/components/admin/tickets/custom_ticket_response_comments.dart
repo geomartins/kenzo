@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:staff_portal/blocs/incoming_ticket_response_bloc.dart';
-import 'package:staff_portal/components/admin/tickets/incoming/custom_incoming_ticket_response_comment_media_frame.dart';
-import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
+import 'package:staff_portal/blocs/ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_response_model.dart';
 import 'package:staff_portal/utilities/dates.dart';
+import '../../custom_offstage_progress_indicator.dart';
+import 'custom_ticket_response_comment_media_frame.dart';
 
-class CustomIncomingTicketResponseComments extends StatelessWidget {
-  final IncomingTicketResponseBloc bloc;
-  CustomIncomingTicketResponseComments({@required this.bloc});
+class CustomTicketResponseComments extends StatelessWidget {
+  final TicketResponseBloc bloc;
+  CustomTicketResponseComments({@required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -72,8 +72,7 @@ class CustomIncomingTicketResponseComments extends StatelessWidget {
                                         fontSize: 15.0,
                                       ),
                             ),
-//            _buildMediaFrame(),
-                            CustomIncomingTicketResponseCommentMediaFrame(
+                            CustomTicketResponseCommentMediaFrame(
                               data: data,
                             ),
                             Column(

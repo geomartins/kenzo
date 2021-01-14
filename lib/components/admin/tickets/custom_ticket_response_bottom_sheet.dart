@@ -1,17 +1,18 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:staff_portal/blocs/incoming_ticket_response_bloc.dart';
-import 'package:staff_portal/components/custom_offstage_progress_indicator.dart';
+import 'package:staff_portal/blocs/ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
-import 'package:staff_portal/providers/incoming_ticket_response_provider.dart';
+import 'package:staff_portal/providers/ticket_response_provider.dart';
 import 'package:staff_portal/utilities/device_file.dart';
 
-class CustomIncomingTicketResponseBottomSheet extends StatelessWidget
-    with GetSnackbar {
+import '../../custom_offstage_progress_indicator.dart';
+
+class CustomTicketResponseBottomSheet extends StatelessWidget with GetSnackbar {
   final VoidCallback cameraOnPressed;
   final VoidCallback fileOnPressed;
   final String responseType;
@@ -19,7 +20,7 @@ class CustomIncomingTicketResponseBottomSheet extends StatelessWidget
   final String initialText;
   final replyController = new TextEditingController();
 
-  CustomIncomingTicketResponseBottomSheet(
+  CustomTicketResponseBottomSheet(
       {this.cameraOnPressed,
       this.fileOnPressed,
       this.responseType = 'text',
@@ -27,7 +28,7 @@ class CustomIncomingTicketResponseBottomSheet extends StatelessWidget
       this.initialText});
   @override
   Widget build(BuildContext context) {
-    final bloc = IncomingTicketResponseProvider.of(context);
+    final bloc = TicketResponseProvider.of(context);
     bloc.editingControllersSink([replyController]);
 
     return StreamBuilder<List<File>>(
@@ -54,7 +55,7 @@ class CustomIncomingTicketResponseBottomSheet extends StatelessWidget
         });
   }
 
-  Widget _buildReplyFieldWithIcons(context, IncomingTicketResponseBloc bloc) {
+  Widget _buildReplyFieldWithIcons(context, TicketResponseBloc bloc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
@@ -132,9 +133,7 @@ class CustomIncomingTicketResponseBottomSheet extends StatelessWidget
     );
   }
 
-  Widget _buildImagePreview(
-      BuildContext context,
-      IncomingTicketResponseBloc bloc,
+  Widget _buildImagePreview(BuildContext context, TicketResponseBloc bloc,
       AsyncSnapshot<List<File>> imagesSnapshot) {
     return !imagesSnapshot.hasData || imagesSnapshot.data.length < 1
         ? Container()

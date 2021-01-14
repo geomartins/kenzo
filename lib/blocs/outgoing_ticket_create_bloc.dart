@@ -88,7 +88,11 @@ class OutgoingTicketCreateBloc extends Object with Validators {
           title: validTitle,
           description: validDescription,
           toDepartment: validDepartment,
-          imageURLs: imageURLs);
+          imageURLs: imageURLs,
+          subscriptionTopics: [
+            validDepartment + '_ticket',
+            _fromDepartment.value + '_ticket'
+          ]);
     } catch (e) {
       rethrow;
     }

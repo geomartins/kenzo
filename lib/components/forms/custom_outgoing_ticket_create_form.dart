@@ -54,8 +54,8 @@ class CustomOutgoingTicketCreateForm extends StatelessWidget with GetSnackbar {
                       onPressed: isLoadingSnapshot.data == true
                           ? null
                           : () async {
-                              await DeviceFile().openFiles(
-                                  bloc, context, ['jpg', 'png', 'pdf'], null);
+                              await DeviceFile()
+                                  .openFiles(bloc, context, [], null);
                             });
                 })),
         Expanded(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:staff_portal/blocs/outgoing_ticket_response_bloc.dart';
+import 'package:staff_portal/blocs/ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/utilities/dates.dart';
-import '../../../custom_offstage_progress_indicator.dart';
+import '../../custom_offstage_progress_indicator.dart';
 
-class CustomOutgoingTicketResponseAppbar extends AppBar {
+class CustomTicketResponseAppbar extends AppBar {
   final VoidCallback leadingOnPressed;
   final TicketModel data;
-  final OutgoingTicketResponseBloc bloc;
+  final TicketResponseBloc bloc;
 
-  CustomOutgoingTicketResponseAppbar(
+  CustomTicketResponseAppbar(
       {this.leadingOnPressed, this.bloc, @required this.data})
       : super(
           elevation: 0.0,
@@ -18,7 +18,9 @@ class CustomOutgoingTicketResponseAppbar extends AppBar {
           iconTheme: IconThemeData(color: Colors.black87),
           title: ListTile(
             leading: CircleAvatar(
-              child: Text('OTR'),
+              child: bloc.validResponseType == 'incoming'
+                  ? Text('ITR')
+                  : Text('OTR'),
               backgroundColor: kPrimaryColor.shade700,
             ),
             title: Text(data.id.toString()),

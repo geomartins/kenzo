@@ -13,7 +13,7 @@ import 'package:staff_portal/mixins/incoming_ticket_scrollers.dart';
 import 'package:staff_portal/providers/incoming_ticket_provider.dart';
 import 'package:staff_portal/providers/preference_provider.dart';
 import 'package:staff_portal/services/firebase_messaging_service.dart';
-import 'package:staff_portal/views/admin/tickets/incoming_ticket_response.dart';
+import 'package:staff_portal/views/admin/tickets/ticket_response.dart';
 
 class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
   static const id = 'incoming_ticket';
@@ -140,7 +140,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
                   department: datas[index].fromDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
-                      context, IncomingTicketResponse.id,
+                      context, TicketResponse.id,
                       arguments: datas[index].id),
                 );
               });
@@ -174,7 +174,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
                   department: datas[index].fromDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
-                      context, IncomingTicketResponse.id,
+                      context, TicketResponse.id,
                       arguments: datas[index].id),
                 );
               });
@@ -207,7 +207,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
                   department: datas[index].fromDepartment,
                   datetime: datas[index].createdAt.toDate(),
                   onPressed: () => Navigator.pushNamed(
-                      context, IncomingTicketResponse.id,
+                      context, TicketResponse.id,
                       arguments: datas[index].id),
                 );
               });

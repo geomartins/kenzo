@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:staff_portal/config/constants.dart';
-import 'package:staff_portal/models/ticket_model.dart';
+import 'package:staff_portal/models/ticket_response_model.dart';
 import 'package:staff_portal/providers/download_service_provider.dart';
+import '../../custom_file_action_buttons.dart';
 
-import '../../../custom_file_action_buttons.dart';
+class CustomTicketResponseCommentMediaFrame extends StatelessWidget {
+  final TicketResponseModel data;
+  CustomTicketResponseCommentMediaFrame({@required this.data});
 
-class CustomIncomingTicketResponseMediaFrame extends StatelessWidget {
-  final TicketModel data;
-  CustomIncomingTicketResponseMediaFrame({@required this.data});
   @override
   Widget build(BuildContext context) {
     final dspBloc = DownloadServiceProvider.of(context);
+
     return data.images.length < 1
         ? Container()
         : Container(
@@ -29,10 +30,12 @@ class CustomIncomingTicketResponseMediaFrame extends StatelessWidget {
                           ? MediaQuery.of(context).size.width
                           : MediaQuery.of(context).size.width / 2,
                       color: kTertiaryColor.shade200,
-                      child: Image.network(
-                        data.images[index.toInt()],
-                        fit: BoxFit.cover,
-                      ),
+                      child: _isImage(data.images[index.toInt()]) == true
+                          ? Image.network(
+                              data.images[index.toInt()],
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(kDefaultFileUrl, fit: BoxFit.cover),
                     ),
                     CustomFileActionButtons(
                         dspBloc: dspBloc, url: data.images[index.toInt()]),
@@ -41,5 +44,15 @@ class CustomIncomingTicketResponseMediaFrame extends StatelessWidget {
               },
             ),
           );
+  }
+
+  bool _isImage(url) {
+    if (url.contains('jpg') ||
+        url.contains('jpeg') ||
+        url.contains('png') ||
+        url.contains('gif')) {
+      return true;
+    }
+    return false;
   }
 }

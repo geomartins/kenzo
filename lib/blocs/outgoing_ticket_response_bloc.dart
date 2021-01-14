@@ -24,7 +24,7 @@ class OutgoingTicketResponseBloc extends Object with Validators {
 
   //SINK
   void ticketIDSink(String value) => _ticketID.add(value);
-  void replySink(String value) => _reply.add(value);
+  void replySink(String value) => _reply.sink.add(value);
   void imagesSink(List<File> value) => _images.sink.add(value);
   void loadingSink(bool value) => _isLoading.sink.add(value);
   void statusSink(String value) {

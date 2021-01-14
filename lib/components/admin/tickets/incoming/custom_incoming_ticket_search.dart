@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:staff_portal/blocs/incoming_ticket_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
-import 'package:staff_portal/views/admin/tickets/incoming_ticket_response.dart';
-import 'package:staff_portal/views/admin/tickets/outgoing_ticket_response.dart';
+import 'package:staff_portal/views/admin/tickets/ticket_response.dart';
 import 'custom_incoming_ticket_list_tile.dart';
 import '../outgoing/custom_outgoing_ticket_list_tile.dart';
 
@@ -61,7 +60,7 @@ class CustomIncomingTicketSearch extends SearchDelegate<TicketModel> {
                   status: results[index].status,
                   onPressed: () {
                     close(context, null);
-                    Navigator.pushNamed(context, IncomingTicketResponse.id,
+                    Navigator.pushNamed(context, TicketResponse.id,
                         arguments: results[index].id);
                   });
             },
@@ -99,7 +98,7 @@ class CustomIncomingTicketSearch extends SearchDelegate<TicketModel> {
                 status: results[index].status,
                 onPressed: () {
                   close(context, null);
-                  Navigator.pushNamed(context, OutgoingTicketResponse.id,
+                  Navigator.pushNamed(context, TicketResponse.id,
                       arguments: results[index].id);
                 });
           },

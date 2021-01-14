@@ -70,11 +70,13 @@ class FirestoreService {
     }
   }
 
-  Future<void> createOutgoingTicket(
-      {String title,
-      String description,
-      String toDepartment,
-      List<String> imageURLs}) async {
+  Future<void> createOutgoingTicket({
+    String title,
+    String description,
+    String toDepartment,
+    List<String> imageURLs,
+    List<String> subscriptionTopics,
+  }) async {
     try {
       DocumentReference userReference = FirebaseFirestore.instance
           .collection('users')
@@ -108,8 +110,7 @@ class FirestoreService {
           "status": 'opened',
           "images": imageURLs,
           "created_at": FieldValue.serverTimestamp(),
-          "notifier": toDepartment + '_ticket',
-          "notifier_view_id": 'incoming_ticket',
+          "subscriptionTopics": subscriptionTopics,
         });
 
         // ticketReference.collection('medias').doc()
@@ -236,6 +237,50 @@ class FirestoreService {
         'description': description,
         'user': snapshot.data(),
         'created_at': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
+
+  Future<void> createTicketResponse(
+      {String ticketID,
+      String reply,
+      List<String> imageURLs,
+      List<dynamic> subscriptionTopics,
+      String arguments}) async {
+    try {
+      DocumentReference userReference = FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.currentUser.uid);
+
+      DocumentReference ticketResponseReference = FirebaseFirestore.instance
+          .collection('tickets')
+          .doc(ticketID)
+          .collection('responses')
+          .doc();
+
+      firestore.runTransaction((transaction) async {
+        // Get the document
+        DocumentSnapshot userSnapshot = await transaction.get(userReference);
+        if (!userSnapshot.exists) {
+          throw Exception("User does not exist!");
+        }
+        ProfileModel profileModel =
+            ProfileModel.fromFirestore(userSnapshot.data());
+
+        //
+        transaction.set(ticketResponseReference, {
+          "reply": reply,
+          "user": profileModel.toMap(),
+          "images": imageURLs,
+          "subscriptionTopics": subscriptionTopics,
+          "arguments": arguments,
+          "created_at": FieldValue.serverTimestamp(),
+        });
       });
     } catch (e) {
       throw PlatformException(

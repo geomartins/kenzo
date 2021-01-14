@@ -36,17 +36,30 @@ admin.initializeApp(functions.config().firebase);
             const data = snap.data();
 
            //Push Notification
-             admin.messaging().sendToTopic(data.notifier, {
+            let subscriptionTopics = data.subscriptionTopics;
+             admin.messaging().sendToTopic(subscriptionTopics[0], {
                  notification: {
                      title: data.user.firstname+' '+data.user.lastname+' @'+data.user.department+'  #'+snap.id,
                      body: 'New Response!!! '+data.reply,
                      clickAction: 'FLUTTER_NOTIFICATION_CLICK',
                  },
                  data: {
-                    view_id: data.notifier_view_id,
-                    arguments: context.params.repId,
+                    view_id: 'ticket_response',
+                    arguments: data.arguments, //context.params.repId
                  }
-             })
+             });
+
+             admin.messaging().sendToTopic(subscriptionTopics[1], {
+                  notification: {
+                      title: data.user.firstname+' '+data.user.lastname+' @'+data.user.department+'  #'+snap.id,
+                      body: 'New Response!!! '+data.reply,
+                      clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+                  },
+                  data: {
+                     view_id: 'ticket_response',
+                     arguments: data.arguments, //context.params.repId
+                  }
+              })
       });
 
 
@@ -65,17 +78,32 @@ admin.initializeApp(functions.config().firebase);
 
 
                 //Push Notification
-                admin.messaging().sendToTopic(newValue.notifier, {
+                let subscriptionTopics = newValue.subscriptionTopics;
+                console.log('subscription topics',subscriptionTopics);
+                //"'ict_ticket' in topics || 'clientservices_ticket' in topics"
+                admin.messaging().sendToTopic(subscriptionTopics[0] ,{
                     notification: {
                        title: newValue.user.firstname+' '+newValue.user.lastname+' @'+newValue.user.department+'  #'+snap.id,
                        body: 'New Ticket!!! '+newValue.title,
                        clickAction: 'FLUTTER_NOTIFICATION_CLICK',
                     },
                     data: {
-                         view_id: newValue.notifier_view_id,
+                         view_id: 'ticket_response',
                          arguments: context.params.docId,
-                    }
+                    },
                });
+
+               admin.messaging().sendToTopic(subscriptionTopics[1] ,{
+                   notification: {
+                      title: newValue.user.firstname+' '+newValue.user.lastname+' @'+newValue.user.department+'  #'+snap.id,
+                      body: 'New Ticket!!! '+newValue.title,
+                      clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+                   },
+                   data: {
+                        view_id: 'ticket_response',
+                        arguments: context.params.docId,
+                   },
+              });
 
           });
 
@@ -95,7 +123,8 @@ admin.initializeApp(functions.config().firebase);
                            //Push Notification
 //
                            if(afterUpdate.status !== beforeUpdate.status){
-                                 admin.messaging().sendToTopic(afterUpdate.from_department+'_ticket', {
+                            let subscriptionTopics = afterUpdate.subscriptionTopics;
+                                 admin.messaging().sendToTopic(subscriptionTopics[0], {
                                      notification: {
                                          title: '@'+afterUpdate.to_department+'  #'+context.params.docId,
                                          body: 'Status Update!!! Ticket marked as '+afterUpdate.status,
@@ -103,10 +132,23 @@ admin.initializeApp(functions.config().firebase);
 
                                      },
                                      data: {
-                                         view_id: 'outgoing_ticket_response',
-                                         arguments: context.params.docId,
+                                         view_id: 'ticket_response',
+                                         arguments: afterUpdate.arguments,
                                      }
                                  });
+
+                                 admin.messaging().sendToTopic(subscriptionTopics[1], {
+                                      notification: {
+                                          title: '@'+afterUpdate.to_department+'  #'+context.params.docId,
+                                          body: 'Status Update!!! Ticket marked as '+afterUpdate.status,
+                                          clickAction: 'FLUTTER_NOTIFICATION_CLICK',
+
+                                      },
+                                      data: {
+                                          view_id: 'ticket_response',
+                                          arguments: afterUpdate.arguments,
+                                      }
+                                  });
                            }
 
 

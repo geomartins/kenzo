@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gx_file_picker/gx_file_picker.dart';
+import 'package:mime/mime.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'dart:io';
@@ -47,8 +48,10 @@ class DeviceFile with GetSnackbar {
                           width: MediaQuery.of(context).size.width / 2,
                           height: 200,
                           color: kTertiaryColor.shade200,
-                          child: Image.file(snapshot.data[index],
-                              fit: BoxFit.cover),
+                          child: _isImage(snapshot.data[index]) == true
+                              ? Image.file(snapshot.data[index],
+                                  fit: BoxFit.cover)
+                              : Image.asset(kDefaultFileUrl, fit: BoxFit.cover),
                         );
                       }
                       return Text('No File');
@@ -61,5 +64,19 @@ class DeviceFile with GetSnackbar {
             ),
           );
         });
+  }
+
+  bool _isImage(File data) {
+    final x = lookupMimeType(data.path, headerBytes: [0xFF, 0xD8]);
+    String extension = '.' + x.split('/')[1];
+
+    if (extension.contains('png') ||
+        extension.contains('jpeg') ||
+        extension.contains('gif') ||
+        extension.contains('jpg')) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

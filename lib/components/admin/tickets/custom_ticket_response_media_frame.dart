@@ -4,10 +4,10 @@ import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 import 'package:staff_portal/providers/download_service_provider.dart';
 
-class CustomOutgoingTicketResponseMediaFrame extends StatelessWidget {
+class CustomTicketResponseMediaFrame extends StatelessWidget {
   final TicketModel data;
 
-  const CustomOutgoingTicketResponseMediaFrame({this.data});
+  const CustomTicketResponseMediaFrame({this.data});
   @override
   Widget build(BuildContext context) {
     final dspBloc = DownloadServiceProvider.of(context);
@@ -29,10 +29,12 @@ class CustomOutgoingTicketResponseMediaFrame extends StatelessWidget {
                           ? MediaQuery.of(context).size.width
                           : MediaQuery.of(context).size.width / 2,
                       color: kTertiaryColor.shade200,
-                      child: Image.network(
-                        data.images[index.toInt()],
-                        fit: BoxFit.cover,
-                      ),
+                      child: _isImage(data.images[index.toInt()]) == true
+                          ? Image.network(
+                              data.images[index.toInt()],
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(kDefaultFileUrl, fit: BoxFit.cover),
                     ),
                     CustomFileActionButtons(
                         dspBloc: dspBloc, url: data.images[index.toInt()]),
@@ -41,5 +43,15 @@ class CustomOutgoingTicketResponseMediaFrame extends StatelessWidget {
               },
             ),
           );
+  }
+
+  bool _isImage(url) {
+    if (url.contains('jpg') ||
+        url.contains('jpeg') ||
+        url.contains('png') ||
+        url.contains('gif')) {
+      return true;
+    }
+    return false;
   }
 }

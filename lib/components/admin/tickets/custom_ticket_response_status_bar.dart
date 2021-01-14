@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:staff_portal/blocs/incoming_ticket_response_bloc.dart';
+import 'package:staff_portal/blocs/ticket_response_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:staff_portal/models/ticket_model.dart';
 
-class CustomIncomingTicketResponseStatusBar extends StatelessWidget {
+class CustomTicketResponseStatusBar extends StatelessWidget {
   final TicketModel data;
-  final IncomingTicketResponseBloc bloc;
-  CustomIncomingTicketResponseStatusBar(
-      {@required this.data, @required this.bloc})
+  final TicketResponseBloc bloc;
+  CustomTicketResponseStatusBar({@required this.data, @required this.bloc})
       : assert(data != null);
 
   @override
@@ -30,9 +29,11 @@ class CustomIncomingTicketResponseStatusBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  bloc.statusSink('opened');
-                },
+                onTap: bloc.validResponseType == 'outgoing'
+                    ? null
+                    : () {
+                        bloc.statusSink('opened');
+                      },
                 child: Icon(
                     data.status == 'opened'
                         ? FontAwesome.heart
@@ -52,9 +53,11 @@ class CustomIncomingTicketResponseStatusBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  bloc.statusSink('pending');
-                },
+                onTap: bloc.validResponseType == 'outgoing'
+                    ? null
+                    : () {
+                        bloc.statusSink('pending');
+                      },
                 child: Icon(
                     data.status == 'pending'
                         ? FontAwesome.heart
@@ -74,10 +77,12 @@ class CustomIncomingTicketResponseStatusBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {
-                  bloc.statusSink('closed');
-                  print('closed');
-                },
+                onTap: bloc.validResponseType == 'outgoing'
+                    ? null
+                    : () {
+                        bloc.statusSink('closed');
+                        print('closed');
+                      },
                 child: Icon(
                     data.status == 'closed'
                         ? FontAwesome.heart
