@@ -1,5 +1,5 @@
 name: staff_portal
-description: AgroPark Staff Portal App
+description: AgroPark Ticketing Solution
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -53,7 +53,7 @@ dependencies:
   storage_path: ^0.2.0
   pinch_zoom_image_last: ^0.3.2
   mime: ^0.9.7
-  rename: ^1.2.0
+  change_app_package_name: ^0.1.2
 
 
 

@@ -1,4 +1,4 @@
-package ng.agropark.staff_portal
+package ng.agropark.kenzo
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

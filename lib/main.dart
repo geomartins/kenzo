@@ -127,6 +127,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-//TODO('Get default document design from Ezenma')
-//TODO('Deploying to Google Playstore playstore')
