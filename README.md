@@ -4,3 +4,6 @@
  </img> <img src="https://agropark.ng/screenshots/kenzo/4.png" width="30%">
  </img> <img src="https://agropark.ng/screenshots/kenzo/5.png" width="30%">
  </img> <img src="https://agropark.ng/screenshots/kenzo/6.png" width="30%"></img>
+ </img> <img src="https://agropark.ng/screenshots/kenzo/7.png" width="30%"></img>
+ </img> <img src="https://agropark.ng/screenshots/kenzo/8.png" width="30%"></img>
+ </img> <img src="https://agropark.ng/screenshots/kenzo/9.png" width="30%"></img>
