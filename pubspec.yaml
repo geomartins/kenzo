@@ -53,6 +53,7 @@ dependencies:
   storage_path: ^0.2.0
   pinch_zoom_image_last: ^0.3.2
   mime: ^0.9.7
+  rename: ^1.2.0
 
 
 
