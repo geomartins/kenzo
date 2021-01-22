@@ -6,6 +6,7 @@ import 'package:staff_portal/blocs/register_bloc.dart';
 import 'package:staff_portal/config/constants.dart';
 import 'package:staff_portal/mixins/get_snackbar.dart';
 import 'package:staff_portal/providers/register_provider.dart';
+import 'package:staff_portal/views/admin/dashboard.dart';
 import 'package:staff_portal/views/login.dart';
 import '../custom_flat_button.dart';
 import '../custom_offstage_progress_indicator.dart';
@@ -247,6 +248,8 @@ class CustomRegisterForm extends StatelessWidget with GetSnackbar {
                                   try {
                                     bloc.loadingSink(true);
                                     await bloc.submit();
+                                    Navigator.pushReplacementNamed(
+                                        context, Dashboard.id);
                                   } on PlatformException catch (e) {
                                     buildCustomSnackbar(
                                         titleText: 'Ooops!!!',

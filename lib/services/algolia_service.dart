@@ -19,16 +19,19 @@ class AlgoliaService {
     //query = query.setFacetFilter('from_department:ict');
     AlgoliaQuerySnapshot algoliaQuerySnapshot = await query.getObjects();
     print(algoliaQuerySnapshot.hits);
-    List<AlgoliaObjectSnapshot> algoliaObjectSnapshot =
-        algoliaQuerySnapshot.hits;
-    for (AlgoliaObjectSnapshot snapshot in algoliaObjectSnapshot) {
-      Map<String, dynamic> data = snapshot.data;
-      data['id'] = snapshot.objectID;
-      data['created_at'] = Timestamp.now();
 
-      TicketModel ticketModel = TicketModel.fromMap(data);
-      if (ticketModel.fromDepartment == fromDepartment) {
-        result.add(ticketModel);
+    if (algoliaQuerySnapshot.hits != null) {
+      List<AlgoliaObjectSnapshot> algoliaObjectSnapshot =
+          algoliaQuerySnapshot.hits;
+      for (AlgoliaObjectSnapshot snapshot in algoliaObjectSnapshot) {
+        Map<String, dynamic> data = snapshot.data;
+        data['id'] = snapshot.objectID;
+        data['created_at'] = Timestamp.now();
+
+        TicketModel ticketModel = TicketModel.fromMap(data);
+        if (ticketModel.fromDepartment == fromDepartment) {
+          result.add(ticketModel);
+        }
       }
     }
 

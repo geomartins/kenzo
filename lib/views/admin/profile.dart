@@ -284,6 +284,7 @@ class Profile extends StatelessWidget with GetSnackbar {
                           titleText: "Success",
                           iconColor: kPrimaryColor,
                           icon: Icons.info);
+                      Navigator.pushNamed(context, Profile.id);
                     } on PlatformException catch (e) {
                       buildCustomSnackbar(
                           messageText: e.message,
@@ -311,6 +312,7 @@ class Profile extends StatelessWidget with GetSnackbar {
                         titleText: "Success",
                         iconColor: kPrimaryColor,
                         icon: Icons.info);
+                    Navigator.pushNamed(context, Profile.id);
                   } on PlatformException catch (e) {
                     buildCustomSnackbar(
                         messageText: e.message,

@@ -37,7 +37,8 @@ class OutgoingTicketPaginators {
   Stream get openedTickets => _openedTickets.stream;
   Stream get closedTickets => _closedTickets.stream;
 
-  Future<void> fetchPendingTickets({int perPage, bool more = false}) async {
+  Future<void> fetchPendingTickets(
+      {int perPage = 25, bool more = false}) async {
     if (_pendingTicketsIsFetchingData.value == true) {
       return;
     }
@@ -72,6 +73,7 @@ class OutgoingTicketPaginators {
     if (more == true) {
       if (_pendingTicketsFetchingMoreData.value == true) {
         if (_pendingTicketsMoreDataAvailability.value == false) {
+          print('Stopped fetching data');
           return;
         }
         try {
@@ -107,13 +109,21 @@ class OutgoingTicketPaginators {
     }
   }
 
-  Future<void> fetchOpenedTickets({int perPage, bool more = false}) async {
+  Future<void> fetchOpenedTickets({int perPage = 25, bool more = false}) async {
+    print('Per Page $perPage');
+
+    //If it is still fetching data
     if (_openedTicketsIsFetchingData.value == true) {
+      print('Hold on!! am still fetch data');
       return;
     }
 
     if (_openedTicketsFetchingMoreData.value == null) {
+      print('Preparing to Fetch Fresh Data');
+
       try {
+        print('Still Preparing to fetch fresh data');
+
         _openedTicketsIsFetchingData.sink.add(true);
         Query q = FirebaseFirestore.instance
             .collection('tickets')
@@ -121,6 +131,7 @@ class OutgoingTicketPaginators {
             .where('from_department', isEqualTo: departmentX.value)
             .orderBy('created_at', descending: true)
             .limit(perPage);
+
         List<QueryDocumentSnapshot> querySnapshot;
         q.snapshots().listen((event) {
           querySnapshot = event.docs;
@@ -132,10 +143,11 @@ class OutgoingTicketPaginators {
       } catch (e) {
         print(e);
       } finally {
+        print('Am done fetching fresh data ');
         _openedTicketsIsFetchingData.sink.add(false);
-      }
 
-      print('First ${_openedTickets.value}');
+        print('I fetched ---  ${_openedTickets.value} fresh data');
+      }
     }
     //
 
@@ -161,7 +173,8 @@ class OutgoingTicketPaginators {
             querySnapshot = event.docs;
             print('${querySnapshot.length} adddddddddddddddd');
             if (querySnapshot.length < perPage) {
-              print('No More data avaialable');
+              print(
+                  'No More data avaialable ---------------------------------------------------');
               _openedTicketsMoreDataAvailability.sink.add(false);
             }
 
@@ -177,7 +190,7 @@ class OutgoingTicketPaginators {
     }
   }
 
-  Future<void> fetchClosedTickets({int perPage, bool more = false}) async {
+  Future<void> fetchClosedTickets({int perPage = 25, bool more = false}) async {
     if (_closedTicketsIsFetchingData.value == true) {
       return;
     }

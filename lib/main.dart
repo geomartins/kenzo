@@ -70,10 +70,16 @@ class _MyAppState extends State<MyApp> {
                             child: LoginProvider(
                               child: GetMaterialApp(
                                 home: MaterialApp(
+                                  // locale: DevicePreview.locale(
+                                  //     context), // Add the locale here
+                                  // builder: DevicePreview
+                                  //     .appBuilder, // Add the builde
                                   navigatorKey: navigatorKey,
                                   title: kAppName,
                                   theme: ThemeData(
                                       primarySwatch: kPrimaryColor,
+                                      visualDensity:
+                                          VisualDensity.adaptivePlatformDensity,
                                       textTheme: TextTheme(
                                         headline6: TextStyle(
                                           color: kTertiaryColor,
@@ -127,3 +133,5 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+//TODO('Push Notification Sound')

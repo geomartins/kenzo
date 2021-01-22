@@ -39,7 +39,8 @@ class IncomingTicketPaginators {
   Stream get openedTickets => _openedTickets.stream;
   Stream get closedTickets => _closedTickets.stream;
 
-  Future<void> fetchPendingTickets({int perPage, bool more = false}) async {
+  Future<void> fetchPendingTickets(
+      {int perPage = 25, bool more = false}) async {
     if (_pendingTicketsIsFetchingData.value == true) {
       return;
     }
@@ -109,7 +110,7 @@ class IncomingTicketPaginators {
     }
   }
 
-  Future<void> fetchOpenedTickets({int perPage, bool more = false}) async {
+  Future<void> fetchOpenedTickets({int perPage = 25, bool more = false}) async {
     if (_openedTicketsIsFetchingData.value == true) {
       return;
     }
@@ -179,7 +180,7 @@ class IncomingTicketPaginators {
     }
   }
 
-  Future<void> fetchClosedTickets({int perPage, bool more = false}) async {
+  Future<void> fetchClosedTickets({int perPage = 25, bool more = false}) async {
     print('Department-- ${departmentX.value}');
     if (_closedTicketsIsFetchingData.value == true) {
       return;

@@ -22,7 +22,7 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
 
   void dependencies(context, OutgoingTicketBloc bloc) async {
     await bloc.fetchDepartment();
-    await bloc.fetchOpenedTickets(perPage: 10);
+    await bloc.fetchOpenedTickets(perPage: 25);
   }
 
   void scrollers(context, OutgoingTicketBloc bloc) {
@@ -47,8 +47,6 @@ class OutgoingTicket extends StatelessWidget with OutgoingTicketScrollers {
             floatingActionButton: FloatingActionButton(
               child: Icon(Icons.add),
               onPressed: () async {
-                // await bloc.fetchClosedTickets(perPage: 2);
-                // print('done');
                 Navigator.of(context).pushNamed(OutgoingTicketCreate.id);
               },
             ),

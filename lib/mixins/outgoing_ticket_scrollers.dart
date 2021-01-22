@@ -14,7 +14,7 @@ class OutgoingTicketScrollers {
       double delta = MediaQuery.of(context).size.height * 0.25;
       print(currentScroll);
       if (maxScroll - currentScroll <= delta) {
-        bloc.fetchOpenedTickets(perPage: 2, more: true);
+        bloc.fetchOpenedTickets(more: true);
       }
     });
   }
@@ -26,7 +26,7 @@ class OutgoingTicketScrollers {
       double delta = MediaQuery.of(context).size.height * 0.25;
       print(currentScroll);
       if (maxScroll - currentScroll <= delta) {
-        bloc.fetchClosedTickets(perPage: 2, more: true);
+        bloc.fetchClosedTickets(more: true);
       }
     });
   }
@@ -39,7 +39,7 @@ class OutgoingTicketScrollers {
       double delta = MediaQuery.of(context).size.height * 0.25;
       print(currentScroll);
       if (maxScroll - currentScroll <= delta) {
-        bloc.fetchPendingTickets(perPage: 2, more: true);
+        bloc.fetchPendingTickets(more: true);
       }
     });
   }

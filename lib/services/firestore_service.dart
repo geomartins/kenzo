@@ -25,6 +25,26 @@ class FirestoreService {
     }
   }
 
+  Future<ProfileModel> getProfileByUIDStream() async {
+    String uid = auth.currentUser.uid;
+    try {
+      Map<String, dynamic> data = {};
+      await firestore
+          .collection('users')
+          .doc(uid)
+          .snapshots()
+          .forEach((element) {
+        data = element.data();
+      });
+      return ProfileModel.fromFirestore(data);
+    } catch (e) {
+      throw PlatformException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
+
   void updatePhotoURL({String photoURL}) async {
     try {
       await auth.currentUser.updateProfile(photoURL: photoURL);

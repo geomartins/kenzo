@@ -21,7 +21,7 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
 
   void dependencies(IncomingTicketBloc bloc) async {
     await bloc.fetchDepartment();
-    await bloc.fetchOpenedTickets(perPage: 10);
+    await bloc.fetchOpenedTickets(perPage: 25);
   }
 
   void scrollers(context, IncomingTicketBloc bloc) {
@@ -161,7 +161,6 @@ class IncomingTicket extends StatelessWidget with IncomingTicketScrollers {
 
           final datas =
               bloc.convertQueryDocumentSnapshotToTicketModel(snapshot.data);
-          print('Closed :::::::::::::: $datas');
 
           return ListView.builder(
               controller: closedTicketsScrollController,

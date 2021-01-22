@@ -104,39 +104,45 @@ class _TicketResponseState extends State<TicketResponse> {
                                 bloc, context, ['jpg', 'png', 'pdf'], null);
                           },
                         ),
-                        body: SingleChildScrollView(
-                          controller: scrollController,
-                          physics: ScrollPhysics(),
-                          child: Container(
-                            color: Colors.transparent,
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10.0),
-                                CustomTicketResponseMetaData(
-                                  data: ticketDataSnapshot.data,
-                                  responseType: bloc.validResponseType,
-                                ),
-                                SizedBox(height: 5.0),
-                                CustomAuthorBox(
-                                  author: ticketDataSnapshot
-                                          .data.user['firstname'] +
-                                      ' ' +
-                                      ticketDataSnapshot.data.user['lastname'],
-                                ),
-                                SizedBox(height: 5.0),
-                                CustomTicketResponseMediaFrame(
-                                  data: ticketDataSnapshot.data,
-                                ),
-                                CustomTicketResponseStatusBar(
-                                  data: ticketDataSnapshot.data,
-                                  bloc: bloc,
-                                ),
-                                SizedBox(height: 10.0),
-                                CustomTicketResponseComments(
-                                  bloc: bloc,
-                                ),
-                                SizedBox(height: 150.0),
-                              ],
+                        body: SafeArea(
+                          minimum: EdgeInsets.symmetric(vertical: 20.0),
+                          top: true,
+                          bottom: true,
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            physics: ScrollPhysics(),
+                            child: Container(
+                              color: Colors.transparent,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10.0),
+                                  CustomTicketResponseMetaData(
+                                    data: ticketDataSnapshot.data,
+                                    responseType: bloc.validResponseType,
+                                  ),
+                                  SizedBox(height: 5.0),
+                                  CustomAuthorBox(
+                                    author: ticketDataSnapshot
+                                            .data.user['firstname'] +
+                                        ' ' +
+                                        ticketDataSnapshot
+                                            .data.user['lastname'],
+                                  ),
+                                  SizedBox(height: 5.0),
+                                  CustomTicketResponseMediaFrame(
+                                    data: ticketDataSnapshot.data,
+                                  ),
+                                  CustomTicketResponseStatusBar(
+                                    data: ticketDataSnapshot.data,
+                                    bloc: bloc,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  CustomTicketResponseComments(
+                                    bloc: bloc,
+                                  ),
+                                  SizedBox(height: 150.0),
+                                ],
+                              ),
                             ),
                           ),
                         ),

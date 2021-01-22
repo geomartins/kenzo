@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:staff_portal/components/builders/custom_auth_builder.dart';
 import 'package:staff_portal/components/custom_bottom_navigation_bar.dart';
 import 'package:staff_portal/components/forms/custom_opinion_form.dart';
 import 'package:staff_portal/providers/opinion_provider.dart';
@@ -17,33 +16,31 @@ class Opinion extends StatelessWidget {
     FirebaseMessagingService().configure(context);
     final height = MediaQuery.of(context).size.height;
 
-    return CustomAuthBuilder(
-      child: Scaffold(
-        bottomNavigationBar: CustomBottomNavigationBar(),
-        body: SafeArea(
-          minimum: EdgeInsets.symmetric(horizontal: 0.0),
-          child: SingleChildScrollView(
-            child: Container(
-                height: height,
-                decoration: BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage('assets/images/bg3.jpeg'),
-                    fit: BoxFit.cover,
-                  ),
+    return Scaffold(
+      bottomNavigationBar: CustomBottomNavigationBar(),
+      body: SafeArea(
+        minimum: EdgeInsets.symmetric(horizontal: 0.0),
+        child: SingleChildScrollView(
+          child: Container(
+              height: height,
+              decoration: BoxDecoration(
+                image: new DecorationImage(
+                  image: new AssetImage('assets/images/bg3.jpeg'),
+                  fit: BoxFit.cover,
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(),
-                    _buildIconWithTitle(context),
-                    CustomOpinionForm(
-                      bloc: bloc,
-                      descriptionTextEditingController:
-                          descriptionTextEditingController,
-                    ),
-                  ],
-                )),
-          ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(),
+                  _buildIconWithTitle(context),
+                  CustomOpinionForm(
+                    bloc: bloc,
+                    descriptionTextEditingController:
+                        descriptionTextEditingController,
+                  ),
+                ],
+              )),
         ),
       ),
     );
@@ -52,11 +49,6 @@ class Opinion extends StatelessWidget {
   Widget _buildIconWithTitle(BuildContext context) {
     return Column(
       children: [
-        // Icon(
-        //   FontAwesome.feed,
-        //   size: 100.0,
-        //   color: kPrimaryColor,
-        // ),
         Image.asset(
           'assets/images/ticket-logo-100.png',
           width: 100.0,

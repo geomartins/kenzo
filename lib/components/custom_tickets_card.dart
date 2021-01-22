@@ -17,6 +17,7 @@ class CustomTicketsCard extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final deviceWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: onPressed,
       child: Container(
@@ -24,7 +25,7 @@ class CustomTicketsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           color: Colors.grey.shade200,
         ),
-        width: MediaQuery.of(context).size.width / 2 - 30,
+        width: deviceWidth > 800 ? 300.0 : deviceWidth / 2 - 30,
         height: 170.0,
         child: Stack(
           alignment: Alignment.center,
